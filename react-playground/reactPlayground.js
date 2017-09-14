@@ -83,4 +83,78 @@ class Button extends React.Component {
 
 ReactDOM.render(<Button/>, mountNode);
 
+/*
+Example: 6
+Description: Shorter syntax (class property without the constructor which is converted to understandable syntax by babel ) of implementing state tied to the component to change the values in the DOM. 
+*/
+
+class Button extends React.Component {
+ state = { name : "stateName-2"}
+	render() {
+  	return (
+    	<button>{this.state.name}</button>
+    );
+  }
+}
+
+ReactDOM.render(<Button/>, mountNode);
+
+/*
+Example: 6
+Description: Syntax to update the state upon user action using react's built setState. setState is the only function should change the state value.
+*/
+
+class Button extends React.Component {
+//initial state
+state = { value : "old"};
+
+//is called from onClick
+handleClick = () => {
+  this.setState ({
+      value:"new"
+  });
+};
+
+  render(){
+    return (
+      <button onClick={this.handleClick}> {this.state.value} </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button/>,mountNode)
+
+/*
+Example: 7
+Description: Syntax to update the state upon user action using react's built setState. setState is the only function should change the state value.
+a. initial state is defined ( state )
+b. click handler is defined ( onClick )
+c. arrow function ( () => )
+d. setState is asynchronus and multiple asynchronus might cause problem, so function can be used to change the value instead of object itself.
+d. previous state of state ( prevState )
+
+*/
+
+class Button extends React.Component {
+//initial state
+state = { counter : 0};
+
+//is called from onClick and defined as component instance property ( accesed visa this )
+handleClick= () => {
+  this.setState((prevState) =>{
+    return {
+      counter: prevState.counter + 1
+    }
+  });
+};
+  render(){
+    return (
+      <button onClick={this.handleClick}> Count : {this.state.counter} </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button/>,mountNode)
+
+
 
