@@ -157,4 +157,60 @@ handleClick= () => {
 ReactDOM.render(<Button/>,mountNode)
 
 
+/*
+Example: 8
+Description: Creating multiple conponents to handle each scenario and passing the values between them. Here MyApp will be parent and Result, Button are child component of MyApp.
+Notes: State is bind to component and having state in the parent react allow us to share the value of state with their child using props. For example: we are passing counter value
+to Result component using incrementCount, and can be accessced via props in Result component.
+*/
+
+
+//Parent
+class MyApp extends React.Component {
+  state = { counter : 0 }
+  
+  incrementHandle = () => {
+    this.setState((prevState)=>({
+      counter:prevState.counter +1
+    }));
+  };
+
+  render(){
+    return (
+      <div>
+        <Button incrementFunction={this.incrementHandle} />
+        <br/>
+        <div>Counter in Parent (MyApp Component): {this.state.counter} </div>
+        <Result incrementCount={this.state.counter}/>
+      </div>
+    )
+  }
+}
+
+//Child1
+class Button extends React.Component {
+  render(){
+    return(
+      <div>
+      <button onClick={this.props.incrementFunction}> Add One [+1]</button>
+      <div> </div>
+      </div>
+    )
+  }
+}
+
+//Child2
+class Result extends React.Component {
+  render(){
+    return (
+      <div> Counter in Child (Result Component) : {this.props.incrementCount}</div>
+    )
+  }
+}
+
+ReactDOM.render(<MyApp/>,mountNode)
+
+
+
+
 
