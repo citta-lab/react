@@ -211,6 +211,86 @@ class Result extends React.Component {
 ReactDOM.render(<MyApp/>,mountNode)
 
 
+/*
+Example: 8
+*/
+
+//Parent
+class MyApp extends React.Component {
+  state = { counter : 0 }
+  
+  incrementHandle = (incrementValue) => {
+    this.setState((prevState)=>({
+      counter:prevState.counter + incrementValue
+    }));
+  };
+  
+  restHandle = () => {
+    this.setState((prevState)=>({
+      counter:0
+    }));
+  };
+
+  render(){
+    return (
+      <div>
+        <div> 
+          <Button incrementValue={1} incrementFunction={this.incrementHandle} />
+          <br/>
+          <Button incrementValue={5} incrementFunction={this.incrementHandle} />
+        </div>
+        <br/>
+        <div>Counter in Parent (MyApp Component): {this.state.counter} </div>
+        <Result incrementCount={this.state.counter}/>
+        <br/>
+        <Reset resetFunction={this.restHandle}/>
+      </div>
+    )
+  }
+}
+
+//Child1
+class Button extends React.Component {
+
+  valueHandle=()=> {
+    return(
+      this.props.incrementFunction(this.props.incrementValue)
+    )
+  }
+  render(){
+    return(
+      <div>
+      <button onClick={this.valueHandle}> Add [+{this.props.incrementValue}]</button>
+      <div> </div>
+      </div>
+    )
+  }
+}
+
+//Child2
+class Result extends React.Component {
+  render(){
+    return (
+      <div> Counter in Child (Result Component) : {this.props.incrementCount}</div>
+    )
+  }
+}
+
+//Child3
+class Reset extends React.Component{
+  render(){
+    return(
+      <button onClick={this.props.resetFunction}>Reset </button>
+    )
+  }
+}
+
+ReactDOM.render(<MyApp/>,mountNode)
+
+
+
+
+
 
 
 
