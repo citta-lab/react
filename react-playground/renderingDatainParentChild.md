@@ -155,7 +155,7 @@ var divStyle = {
   margin: "20px"
 };
 
-	return (
+return (
   	<div style={divStyle}> 
     	<img width ="75" src={props.avatar} />
     	<div style={{display:'inline-block', marginLeft:10}}>
