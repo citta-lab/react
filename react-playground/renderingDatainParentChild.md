@@ -156,13 +156,13 @@ var divStyle = {
 };
 
 return (
-  	<div style={divStyle}> 
-    	<img width ="75" src={props.avatar} />
-    	<div style={{display:'inline-block', marginLeft:10}}>
-    	<div style={{fontSize:'1.25em', fontWeight:'bold'}}> Name: {props.name} </div>
-    	<div> Company: {props.company}</div>
-    	</div>
-    </div>
+	<div style={divStyle}> 
+		<img width ="75" src={props.avatar} />
+		<div style={{display:'inline-block', marginLeft:10}}>
+		<div style={{fontSize:'1.25em', fontWeight:'bold'}}> Name: {props.name} </div>
+		<div> Company: {props.company}</div>
+		</div>
+	</div>
   );
 };
 ```
