@@ -64,25 +64,25 @@ name can be accessed via props as `{props.name}` in functional child component a
 //functional component ( child )
 const Card = (props) => {
 
-var divStyle = {
-	background: "#eee",
-	padding: "20px",
-	margin: "20px"
-};
-  
-var nameStyle ={
-	fontSize:'1.25em',
-	fontWeight:'bold'
-};
-  
-return (
-<div style={divStyle}>
-	<div style={{display:'inline-block', marginLeft:10}}>
-	<div style={nameStyle}> Name: {props.name} </div>
-	<div> Company: {props.company}</div>
+	var divStyle = {
+		background: "#eee",
+		padding: "20px",
+		margin: "20px"
+	};
+	  
+	var nameStyle ={
+		fontSize:'1.25em',
+		fontWeight:'bold'
+	};
+	  
+	return (
+	<div style={divStyle}>
+		<div style={{display:'inline-block', marginLeft:10}}>
+		<div style={nameStyle}> Name: {props.name} </div>
+		<div> Company: {props.company}</div>
+		</div>
 	</div>
-</div>
-  );
+	  );
 };
 
 ```
