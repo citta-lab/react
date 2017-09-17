@@ -76,12 +76,12 @@ var nameStyle ={
 };
   
 return (
-	<div style={divStyle}>
-		<div style={{display:'inline-block', marginLeft:10}}>
-		<div style={nameStyle}> Name: {props.name} </div>
-		<div> Company: {props.company}</div>
-		</div>
+<div style={divStyle}>
+	<div style={{display:'inline-block', marginLeft:10}}>
+	<div style={nameStyle}> Name: {props.name} </div>
+	<div> Company: {props.company}</div>
 	</div>
+</div>
   );
 };
 
