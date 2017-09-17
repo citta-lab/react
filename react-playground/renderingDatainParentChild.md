@@ -148,11 +148,12 @@ Finally, all the key values can be retrived using react's spread operator `{...c
 ```javascript
 //functional component ( child )
 const Card = (props) => {
-	var divStyle = {
+
+var divStyle = {
   background: "#eee",
   padding: "20px",
   margin: "20px"
-	};
+};
 
 	return (
   	<div style={divStyle}> 
