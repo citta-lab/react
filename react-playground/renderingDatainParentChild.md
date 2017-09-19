@@ -2,7 +2,8 @@ Render Data in Components
 --------------------------
 
 The example is to explain child component rendering inside the parent component to avoid the code duplication by keeping the child component 
-independent of data and use react's functions to minimize the code. 
+independent of data and use react's functions to minimize the code. The example has been referenced from Samer Buna's plurasite coourse but have altered and 
+modified based on my learning expericence. 
 
 #### Part I:
 
@@ -181,4 +182,15 @@ const CardList = (props) => {
 
 ReactDOM.render(<CardList cards={data}/>,mountNode)
 ```
+
+#### Part IV:
+
+In this section we will add above learnt components to the app and add funtion to add user to card component, learn state and props to exchange data between parent to child, child to parent. 
+
+> Writing independent and modular component is very important by focusing one job per component. In our example, we have card (child) component to display the data in card format and cardList (parent) component to hold list of cards. If we were to add any other functionality to it, example search feature or adding card details or having different view then we should be creating new component to keep the job per component unique.
+
+1. New child component 
+
+
+
 
