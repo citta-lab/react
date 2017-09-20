@@ -2,7 +2,7 @@ Render Data in Components
 --------------------------
 
 The example is to explain child component rendering inside the parent component to avoid the code duplication by keeping the child component 
-independent of data and use react's functions to minimize the code. The example has been referenced from Samer Buna's plurasite coourse but have altered and 
+independent of data and use react's functions to minimize the code. The example has been referenced from Samer Buna's pluralsite coourse but have altered and 
 modified based on my learning expericence. 
 
 playground: https://jscomplete.com/repl/
@@ -107,7 +107,7 @@ let data =[
   {
     name:'Nimesh',
     avatar:'https://avatars2.githubusercontent.com/u/4977276?v=4',
-    company:'Seamantic'
+    company:'Semantic'
   }
 ]
 ```
@@ -224,8 +224,9 @@ we have added the style variable to the form tag, and onClick on Add button to t
 deafult submit action by leveraging react's event by `event.preventDefault()`. 
 
 ```javascript
- handleFormSubmit = () => {
-      console.log(" submit");
+ handleFormSubmit = (event) => {
+ 	  event.preventDefault();
+      console.log(" submit"); /*submit will be printed upon click*/
   }
 ```
 
@@ -233,7 +234,7 @@ deafult submit action by leveraging react's event by `event.preventDefault()`.
 
 Now we will be creating the parent class component to hold ChildList (functional child) component and Form (class child) component and also manage the state for entire app hence the class component. 
 
-> Hence we would be moving the global data variable to state inside the component as defined, and change the data access in the props from `{data}` to `{this.state.data}`. The important thing to keep an eye while moving the data to state is replacing `=` with `:`. For example: `var data = [ { name: "Bob"}]` should be replaced as `state = { data: [ { name: "Bob"} ]}`
+> Hence we would be moving the global data variable to state inside the component (as mentioned below in the snippet), we need to change the data access in the directive props from `{data}` to `{this.state.data}`. The important thing to keep an eye while moving the data to state is replacing `=` with `:`. For example: `var data = [ { name: "Bob"}]` should be replaced as `state = { data: [ { name: "Bob"} ]}`
 
 ```javascript
 class GitApp extends React.Component {
@@ -249,7 +250,7 @@ class GitApp extends React.Component {
       {
         name:'Nimesh',
         avatar:'https://avatars2.githubusercontent.com/u/4977276?v=4',
-        company:'Seamantic'
+        company:'Semantic'
       }
     ]
   }
@@ -268,7 +269,44 @@ class GitApp extends React.Component {
 
 ReactDOM.render(<GitApp />,mountNode)
 ```
-Also notice the render method has been changed to call parent component `<GitApp>` instead of `<ChildList>`. 
+Also notice the render method has been changed to call parent component `<GitApp>` instead of `<ChildList>`. By this point we should have working app minus the user addition to the state.
 
+3. Enhance the Form Component to handle the user input 
+
+In #1 ( Part IV ) we defined the the Form class component and bare minimum details. Now we need to focus on few things 
++ (i). Declare Form state to hold the user input `state={userName:''}`.
++ (ii). Enhance input directive with react's value attribute to retrive state value `value={this.state.userName}`.
++ (iii). If we change `userName:'Rob'` the app will load textbox with Rob value init.
++ (iv). Add react's onChange attribute to listen to any changes made on input text box `onChange={ .....}`.
++ (v). Add function call and define function to capture the data through `event`. So onChange would be `={this.handleFormValue}`.
++ (vi). Retrive value from event and set userName value to corresponding value inside setState. i.e `setState = { userName : event.target.value }`
+
+In render function
+```javascript
+<input type="text" placeHolder="github username" value={this.state.userName} onChange={this.handleFormValue}/>
+```
+
+Outside render function
+```javascript
+// step:1 set blank value as username on load
+	state = {
+  	userName:''
+  }
+  
+  // step:2 use react's onChange to listen to event change and setState value
+  handleFormValue = (event) => {
+  	this.setState({
+    	userName:event.target.value  
+    });
+  };
+  
+  // step:3 when button clicked retrive newly added state value
+  handleFormSubmit = (event) => {
+      event.preventDefault();
+      console.log(" username : "+this.state.userName)
+  };
+  ```
+
+  
 
 
