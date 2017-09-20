@@ -406,3 +406,45 @@ I have declared storeData outside of any components here however we can also dec
   };
 ```
 At this point if the user search for "Bob" or "Rob" we should be seeing the state in GitApp render with newly added data. We can refer the complete script here [renderingDatainParentChildPartVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/scripts/renderingDatainParentChildPartVComplete.js) 
+
+
+#### Part VI:
+
+Instead of having global storeData to have some pre-defined data for add we can use gitHub api to look for user and resolve the response before passing it to onSubmit to the GitApp. The API to look for user `https://api.github.com/users/xxxx`. and using [axios](https://www.npmjs.com/package/axios) to handle the response.
+
+1. Adding the API call instead.
+
+```javascript
+// step:3 when button clicked retrive newly added state value
+  handleFormSubmit = (event) => {
+      
+      event.preventDefault();
+      
+      //step:4 calling api 
+      axios.get(`https://api.github.com/users/${this.state.userName}`)
+        .then(response => {
+            // step: 5 sending newData object to onSubmit
+            this.props.onSubmit(response.data);
+        })
+        .catch(function (error) {
+          console.log(" Network or User Not Found :"+error);
+        });
+      
+      //step:6 clear the value
+      this.setState({
+      	userName:''
+      });
+  };
+```
+
+2. Resetting the userName in textbox to blank.
+
+In the above script we are setting userName to blank once the successful call has been made to the api and this will remove entereted value in the inbox. 
+```javascript
+//step:6 clear the value
+    this.setState({
+      userName:''
+    });
+```
+
+
