@@ -358,5 +358,51 @@ Outside render function
 
 Refer [renderingDatainParentChildPartIVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChildPartIVComplete.js) code for Part IV complete code ( accumulated code from part I )
 
+#### Part V:
 
+In this section we will focus on adding new card details by matching the globally declared json and later we will move on to query from the api instead. 
 
+1. Declare new local storeData to hold card details 
+
+```javascript
+//global dataRepo for search
+var storeData = [
+      	{
+      	name:"Rob",
+        avatar:'https://avatars3.githubusercontent.com/u/503?v=4',
+        company:'ABCD'
+      	},
+        {
+      	name:"Bob",
+        avatar:'https://avatars3.githubusercontent.com/u/303?v=4',
+        company:'Yelp'
+       }
+  ];
+```
+I have declared storeData outside of any components here however we can also declare inside the Form component if prefered. Next step we would need to change our logic in Form component to look for match with the storeData before sending it throug the props. 
+
+2. Updating handleFormSubmit() to handle match, build new json and call props
+
+```javascript
+// step:3 when button clicked retrive newly added state value
+  handleFormSubmit = (event) => {
+      event.preventDefault();
+      
+      //step:4 step two has changed the state with new value, now trying to check if the match has been found with global data repo storeData and propagate it to onSubmit 
+      
+      if ( this.state.userName != '' && this.state.userName != null ){
+      	for (var i=0; i < storeData.length; i++){
+        	if ( storeData[i].name == this.state.userName ){
+              var matchedData = { 
+              		name:storeData[i].name, 
+                  avatar:storeData[i].avatar, 
+                  company:storeData[i].company 
+              }          
+              // step: 5 sending newData object to onSubmit
+      				this.props.onSubmit(matchedData);
+          }
+        }
+      }
+  };
+```
+At this point if the user search for "Bob" or "Rob" we should be seeing the state in GitApp render with newly added data. 
