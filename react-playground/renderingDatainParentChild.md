@@ -356,7 +356,7 @@ Outside render function
   }
 ```
 
-Refer [renderingDatainParentChildPartIVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChildPartIVComplete.js) code for Part IV complete code ( accumulated code from part I )
+Refer [renderingDatainParentChildPartIVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/scripts/renderingDatainParentChildPartIVComplete.js) code for Part IV complete code ( accumulated code from part I )
 
 #### Part V:
 
@@ -405,4 +405,4 @@ I have declared storeData outside of any components here however we can also dec
       }
   };
 ```
-At this point if the user search for "Bob" or "Rob" we should be seeing the state in GitApp render with newly added data. We can refer the complete script here [renderingDatainParentChildPartVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChildPartVComplete.js) 
+At this point if the user search for "Bob" or "Rob" we should be seeing the state in GitApp render with newly added data. We can refer the complete script here [renderingDatainParentChildPartVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/scripts/renderingDatainParentChildPartVComplete.js) 
