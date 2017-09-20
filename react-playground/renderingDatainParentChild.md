@@ -394,12 +394,12 @@ I have declared storeData outside of any components here however we can also dec
       	for (var i=0; i < storeData.length; i++){
         	if ( storeData[i].name == this.state.userName ){
               var matchedData = { 
-              		name:storeData[i].name, 
-                  avatar:storeData[i].avatar, 
-                  company:storeData[i].company 
+              	name:storeData[i].name, 
+                avatar:storeData[i].avatar, 
+                company:storeData[i].company 
               }          
               // step: 5 sending newData object to onSubmit
-      				this.props.onSubmit(matchedData);
+      			this.props.onSubmit(matchedData);
           }
         }
       }
