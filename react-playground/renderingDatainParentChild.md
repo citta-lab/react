@@ -279,7 +279,7 @@ In #1 ( Part IV ) we defined the the Form class component and bare minimum detai
 + (iii). If we change `userName:'Rob'` the app will load textbox with Rob value init.
 + (iv). Add react's onChange attribute to listen to any changes made on input text box `onChange={ .....}`.
 + (v). Add function call and define function to capture the data through `event`. So onChange would be `={this.handleFormValue}`.
-+ (vi). Retrive value from event and set userName value to corresponding value inside setState. i.e `setState = { userName : event.target.value }`
++ (vi). In handleFormValue function retrive value from the event and set (state) userName value to corresponding value using setState. i.e `setState = { userName : event.target.value }`. At this point state in Form component has new data added by the user.
 
 In render function
 ```javascript
@@ -306,7 +306,57 @@ Outside render function
       console.log(" username : "+this.state.userName)
   };
   ```
++(vii). Now upon add button click we need to propagate this new state value to GitApp state using props.
++(viii). For ease of understanding i have built newData object with user inputted value from state ( userName) and appended with constat avatar, company. `i.e newData `
 
+```javascript
+// step:1 set blank value as username on load
+	state = {
+  	userName:''
+  }
   
+  // step:2 use react's onChange to listen to event change and setState value
+  handleFormValue = (event) => {
+  	this.setState({
+    	userName:event.target.value  
+    });
+  };
+  
+  // step:3 when button clicked retrive newly added state value
+  handleFormSubmit = (event) => {
+      event.preventDefault();
+      
+      //step:4 step two has changed the state with new value, now building new object
+      var newData = {
+      	name:this.state.userName,
+        avatar:'https://avatars3.githubusercontent.com/u/503?v=4',
+        company:'ABCD'
+      }
+      
+      // step: 5 sending newData object to onSubmit
+      this.props.onSubmit(newData);
+  };
+```
+
++(ix). propagating to onSubmit function with the new object. i.e `this.props.onSubmit(newData)`
++(x). In GitApp's render method, Form component directive defines onSubmit and invovkes component function handleAddCard with data. i.e onSubmit={this.handleAddCard}`.
+
+```javascript
+/*step 6: trigerred by this.props.onSubmit() from Form component */
+<Form onSubmit={this.handleAddCard}/>
+```
++(xi). Define handleAddCard function to append the newData object to state's data object using setState. 
+
+```javascript
+//step 7: called by onSubmit from the Form directive in render
+  handleAddCard = (cardInfo) => {
+    this.setState(prevState => ({
+    	data : prevState.data.concat(cardInfo)
+    }));
+  }
+```
+
+Refer renderingDatainParentChildPartIVComplete.js code for Part IV complete code ( accumulated code from part I )
+
 
 
