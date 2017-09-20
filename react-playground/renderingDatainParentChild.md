@@ -306,8 +306,8 @@ Outside render function
       console.log(" username : "+this.state.userName)
   };
   ```
-+(vii). Now upon add button click we need to propagate this new state value to GitApp state using props.
-+(viii). For ease of understanding i have built newData object with user inputted value from state ( userName) and appended with constat avatar, company. `i.e newData `
++ (vii). Now upon add button click we need to propagate this new state value to GitApp state using props.
++ (viii). For ease of understanding i have built newData object with user inputted value from state ( userName) and appended with constat avatar, company. `i.e newData `
 
 ```javascript
 // step:1 set blank value as username on load
@@ -338,14 +338,14 @@ Outside render function
   };
 ```
 
-+(ix). propagating to onSubmit function with the new object. i.e `this.props.onSubmit(newData)`
-+(x). In GitApp's render method, Form component directive defines onSubmit and invovkes component function handleAddCard with data. i.e onSubmit={this.handleAddCard}`.
++ (ix). propagating to onSubmit function with the new object. i.e `this.props.onSubmit(newData)`
++ (x). In GitApp's render method, Form component directive defines onSubmit and invovkes component function handleAddCard with data. i.e onSubmit={this.handleAddCard}`.
 
 ```javascript
 /*step 6: trigerred by this.props.onSubmit() from Form component */
 <Form onSubmit={this.handleAddCard}/>
 ```
-+(xi). Define handleAddCard function to append the newData object to state's data object using setState. 
++ (xi). Define handleAddCard function to append the newData object to state's data object using setState. 
 
 ```javascript
 //step 7: called by onSubmit from the Form directive in render
@@ -356,7 +356,7 @@ Outside render function
   }
 ```
 
-Refer renderingDatainParentChildPartIVComplete.js code for Part IV complete code ( accumulated code from part I )
+Refer [renderingDatainParentChildPartIVComplete.js](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChildPartIVComplete.js) code for Part IV complete code ( accumulated code from part I )
 
 
 
