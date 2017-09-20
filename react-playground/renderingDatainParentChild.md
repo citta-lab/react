@@ -446,5 +446,8 @@ In the above script we are setting userName to blank once the successful call ha
       userName:''
     });
 ```
+Note: axios.get can also be used as axios( method:'get', url:'') and make sure to use https instead of http to prevent Network Error. 
+
+At this point we have complete app to look for github user and add it to the cardList etc. Can refer the complete code at [renderingDatainParentChildPartVIComplete](https://github.com/citta-lab/react/blob/master/react-playground/scripts/renderingDatainParentChildPartVIComplete.js). 
 
 
