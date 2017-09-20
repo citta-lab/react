@@ -5,6 +5,9 @@ The example is to explain child component rendering inside the parent component 
 independent of data and use react's functions to minimize the code. The example has been referenced from Samer Buna's plurasite coourse but have altered and 
 modified based on my learning expericence. 
 
+playground: https://jscomplete.com/repl/
+
+
 #### Part I:
 
 1. Defining child functional component to display the generic card details. We have also defined divStyle to define react's inline style property.
@@ -187,10 +190,85 @@ ReactDOM.render(<CardList cards={data}/>,mountNode)
 
 In this section we will add above learnt components to the app and add funtion to add user to card component, learn state and props to exchange data between parent to child, child to parent. 
 
-> Writing independent and modular component is very important by focusing one job per component. In our example, we have card (child) component to display the data in card format and cardList (parent) component to hold list of cards. If we were to add any other functionality to it, example search feature or adding card details or having different view then we should be creating new component to keep the job per component unique.
+> Writing independent and modular component is very important by focusing one job per component. In our example, we have card (child) component to display the data in card format and cardList (parent) component to hold list of cards. If we were to add any other functionality to it, for instance adding search feature or adding card details panel or having different view then we should be creating new component to keep the job per component unique.
 
-1. New child component 
+1. New form child component 
 
+New class child component to add the user details to the data object, hence we are dealing with state of the data we need to define class component instead of functional. 
+
+```javascript
+//class (child3) component 
+class Form extends React.Component {
+
+  handleFormSubmit = () => {
+      console.log(" submit");
+  }
+
+  render(){
+
+     var formStyle = {
+        float: "right",
+        padding: "20px",
+        margin: "0px",
+     };
+
+    return (
+      <form id="addForm" style={formStyle} >
+        <input type="text" placeHolder="github username"/>
+        <button class="btn btn-primary" type="submit" onClick={this.handleFormSubmit}>Add</button>
+      </form>
+    );
+}};
+```
+we have added the style variable to the form tag, and onClick on Add button to trigger handleFormSubmit function associated with the Form component and hence `{this.handleFormSubmit}`. Upon clicking the add we expect console to print "submit" and not refresh the page however the default submit does exactly that. So we need to prevent the 
+deafult submit action by leveraging react's event by `event.preventDefault()`. 
+
+```javascript
+ handleFormSubmit = () => {
+      console.log(" submit");
+  }
+```
+
+2. New parent (GitApp) component 
+
+Now we will be creating the parent class component to hold ChildList (functional child) component and Form (class child) component and also manage the state for entire app hence the class component. 
+
+> Hence we would be moving the global data variable to state inside the component as defined, and change the data access in the props from `{data}` to `{this.state.data}`. The important thing to keep an eye while moving the data to state is replacing `=` with `:`. For example: `var data = [ { name: "Bob"}]` should be replaced as `state = { data: [ { name: "Bob"} ]}`
+
+```javascript
+class GitApp extends React.Component {
+
+  //moving global data to state
+  state = {
+    data : [
+      {
+        name:'Mahesh',
+        avatar:'https://avatars0.githubusercontent.com/u/16902666?v=4',
+        company:'Facebook'
+      },
+      {
+        name:'Nimesh',
+        avatar:'https://avatars2.githubusercontent.com/u/4977276?v=4',
+        company:'Seamantic'
+      }
+    ]
+  }
+
+  render(){
+    return (
+      <div>
+        <Form/>
+        <br/><br/>
+        <div>
+          <CardList cards={this.state.data}/>
+        </div>
+      </div>
+    );
+  }};
+
+ReactDOM.render(<GitApp />,mountNode)
+```
+Also notice the render method has been changed to call parent component `<GitApp>` instead of `<ChildList>`. 
 
 
 
