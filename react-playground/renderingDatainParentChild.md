@@ -410,7 +410,7 @@ At this point if the user search for "Bob" or "Rob" we should be seeing the stat
 
 #### Part VI:
 
-Instead of having global storeData to have some pre-defined data for add we can use gitHub api to look for user and resolve the response before passing it to onSubmit to the GitApp. The API to look for user `https://api.github.com/users/xxxx`. and using [axios](https://www.npmjs.com/package/axios) to handle the response.
+Instead of having global storeData to have some pre-defined data for add we can use gitHub api to look for user and resolve the response before passing it to onSubmit to the GitApp. The API to look for user `https://api.github.com/users/xxxx`. and using [axios](https://www.npmjs.com/package/axios) to handle the response. axios is heavily inspired by the $http service provided in Angular and providing $http service outside of Angualr app.
 
 1. Adding the API call instead.
 
