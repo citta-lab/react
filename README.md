@@ -95,3 +95,35 @@ ReactDOM.render(<App/>,mountNode);
 * Once the DOM render is complete ComponentDidMount() is called
 * setState is called and state value has been changed
 * setState re-triggers the render method and render() method id called with state.name value
+
+5. setState() [ useful functions ]
+
+There are few examples i fumbled into which we can refer to alter the data using setState are as mentioned below,
+
+* setState in componentDidMount()
+```javascript
+componentDidMount(){
+    ContactsAPI.getAll().then((data)=> this.setState({
+      contacts: data
+    }))
+  }
+```
+* setState to filter data
+```javascript
+removeContact = (contact) => {
+   //removing from the local state
+    this.setState((prevState) => ({
+      contacts:prevState.contacts.filter((c) => c.id !== contact.id )
+    }))
+```
+Above filter will set new state with non matching user inputted contact id.
+
+* setState to trim
+```javascript
+updateQuery = (query) => {
+        this.setState({
+            query: query.trim()
+        })
+    }
+```
+inserted values are trimmed for space and tabs
