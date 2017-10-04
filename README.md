@@ -54,7 +54,11 @@ ReactDOM.render(<App/>,mountNode);
 ```
 In App component we have reused the `ContactList` twice and configure them independently of each other to set different data values.
 
-3. Render():
+3. Component state:
+
+https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChild.md
+
+4. Render():
 
 Render method in react should be kept as pure functions and responsible for handling the request to DOM and nothing else. We can always add data call such has API / Ajax request inside the render but it will hinder the performance and divert from the design pattern. So to access / fetch data from the API and then manage these data via component state ( managing component data via state is called controlled component ) can be achieved using react's lifecycle hooks.
 * ComponentWillMount ( checks before component's render method mounted to the DOM )
