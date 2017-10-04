@@ -1,84 +1,152 @@
+const Starts = (props) => {
+  /*
+  const stars= [];
+  for ( var i =0; i< Numbers; i++){
+  	 stars.push(<i className="fa fa-star"></i>)
+  }
+  */
 
-const Button = () => {
 	return (
-  	<div className="col-2"> 
-    	<button>=</button>
+  	<div className="col-sm-4"> 
+    {_.range(props.randomNumberOfStars).map((number,i) => 
+    	<i className="fa fa-star" key={i}></i>
+    )}
     </div>
   )
 }
 
-
-//step6: Answers to hold the number 
-const Answers = () => {
-	return (
-  	<div className="col-5">Answer</div>
-  )
-}
-
-
-
-//step5: Define numbers to choose 
-const Numbers = () => {
-	return (
-  	<div className="card text-center"> 
-  		<div>
-        <span >1</span>
-        <span className="selected">2</span>
-        <span className="used	">3</span>
-        <span>4</span>
-        <span>5</span>
-      </div>
-    </div>
-  )
-}
-
-Numbers.list = _.range(1,10);
-
-
-//step4: Define Star component and render in Game
-const Star = () => {
+const Answer = (props) => {
 	
-  	const randomNumber = 1+Math.random()*9;
-    let starts=[];
-    for ( var i =0; i<randomNumber; i++ ){
-      	starts.push(<i className="fa fa-star"></i>);
-    }
-    
-	return (	
-  	<div className="col-5"> 
-      {starts}
+	return (
+  	<div className="col-sm-4"> 
+    	{props.selectedNumber.map( (number,i) => 
+    		<span key={i} onClick={() => props.unselectNumbers(number)}> 
+    			{number}
+    		 </span>
+    	)} 
     </div>
   )
 }
 
-//step3: Define Game component and test the app
+const Button = (props) => {
+
+  let button;
+  switch(props.answerCorrect){
+  	case true:
+    	button =
+      	<button className="btn btn-success"> 
+      		<i className="fa fa-check"></i> 
+      	</button>;
+    case false:
+    	button =
+      	<button className="btn btn-danger"> 
+      		<i className="fa fa-times"></i> 
+      	</button>;
+    default:
+    	button = 
+      	<button className="btn" 
+      			onClick={props.checkAnswer} 
+      			disabled={props.selectedNumbers === 0}> 
+      			= 
+      	</button>;
+    break;
+  }
+  
+	return(
+  	<div className="col-sm-4"> 
+    	{button}
+    </div>
+  )
+}
+
+const Number = (props) => {
+
+/*
+const aNumbers= _.range(0,10);
+<div> {aNumbers.map(number => <span> {number} </span>)} </div>
+*/
+
+	const numberClassName = (sNumber) => {
+    if (props.selectedNumber.indexOf(sNumber) >= 0 ){
+    	return "selected"
+    }
+  }
+	return(
+  	<div className="card text=center">
+  		<div>
+        	{Number.list.map(number => 
+        		<span className={numberClassName(number)} 
+        				onClick={()=>props.selectNumber(number)}> 
+        		{number} 
+        		</span>
+        	)}
+      </div>
+  	</div>
+  )
+}
+
+Number.list = _.range(0,10);
+
 class Game extends React.Component {
+
+	state = {
+  	selectedNumber : [],
+    randomNumberOfStars : 1 + Math.floor(Math.random()*9),
+    answerCorrect: null,
+  };
+  
+  selectNumber =(clickedNumber)=> {
+  	if ( this.state.selectedNumber.indexOf(clickedNumber) >= 0){return ;}
+  	this.setState(prevState => ({
+    	answerCorrect:null,
+    	selectedNumber: prevState.selectedNumber.concat(clickedNumber)
+    }));
+    console.log(" selectedNumber : "+this.state.selectedNumber)
+  }
+  
+  unselectNumbers =(clickedNumber)=>{
+  	this.setState(prevState => ({
+      answerCorrect:null,
+    	selectedNumber: prevState.selectedNumber.filter(number => number !== clickedNumber)
+    }))
+  }
+   
+  checkAnswer = () => {
+  	this.setState(prevState => ({
+    	answerCorrect: prevState.randomNumberOfStars ===
+      	prevState.selectedNumber.reduce((acc, n) => acc + n, 0)
+    }));
+    console.log(this.state.answerCorrect);
+  };
+
 	render(){
+  	
+    const { randomNumberOfStars, selectedNumber,answerCorrect } = this.state;
+  
   	return (
-    	<div className="container">
-      	<h3> Play Nine </h3>
+      <div className="container">
+      	<h3>Play Nine</h3>
         <hr/>
-      	<div className="row">
-        	<Star/>
-          <Button/>
-        	<Answers/>
+        <div className="row">
+          <Starts randomNumberOfStars={randomNumberOfStars}/>
+          <Button selectedNumber={selectedNumber} 
+          				checkAnswer={this.checkAnswer} 
+                  answerCorrect={answerCorrect}/>
+          <Answer selectedNumber={selectedNumber} 
+          				unselectNumbers={this.unselectNumbers}/>
         </div>
-        <br/>
-        	<Numbers/>
+        	<br/>
+          <Number selectedNumber={selectedNumber} 
+          				selectNumber={this.selectNumber}/>
       </div>
     )
   }
 }
 
-
-//step2: define the App component 
-class App extends React.Component {
-	render(){
-  	return(
-    	<Game/>
-    )
-  }
+const App = (props) => {
+	return(
+  	<Game/>
+  )
 }
 
-//step1: always render the App.
 ReactDOM.render(<App/>,mountNode)

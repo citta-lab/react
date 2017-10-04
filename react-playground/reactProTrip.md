@@ -1,6 +1,18 @@
 React Tips 
 --------------------------
 
+###Things to work on
+1. Syntax for functional component 
+2. Code outside JSX
+3. Range ( _.range ) instead of loop
+4. Array vs Object while building data in state
+5. Function reference vs Function call.
+6. Desctructuring out of the state object.
+7. Why return within one container 
+8. World of camelCase
+
+###Deep Drive
+
 1. Syntax to declare functional component 
 
 ```javascript
@@ -53,5 +65,10 @@ const rangeArray = _.range(0,10);
 ReactDOM.render(<NameComp />,mountNode)
 ```
 Instead of creating for or while loop we can use `_.range( first element, last_exlucsive_elelemt)` returns the array. Which we can use in map function. 
+
+
+
+References:
+1. https://medium.com/react-tutorials/react-components-828c397e3dc8 
 
 

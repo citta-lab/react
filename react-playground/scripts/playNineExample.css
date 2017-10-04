@@ -2,7 +2,7 @@
   color: #333;
 }
 
-.fa-star{
+.fa star{
 	margin:0.5em;
   font-size:24px;
 }
@@ -10,21 +10,28 @@
 span{
 	display:inline-block;
   margin:0.5em;
-  text-align: center;
-  background-color: #ccc;
+  text-align:center;
+  background-color:#ccc;
   width:24px;
   border-radius:50%;
   cursor:pointer;
 }
 
-.selected {
-	background-color: #eee;
+.selected{
+	background-color:#eee;
   color:#ddd;
   cursor:not-allowed;
 }
-
 .used{
-	background-color: #aaddaa;
-  color:#99bb99;
-  cursor:not-allowed;
+	background-color:#aaddaa;
+   color:#99bb99;
+   cursor:not-allowed;
+}
+
+.btn{
+	background-color:skyblue;
+}
+
+.fa{
+	color:orange;
 }
