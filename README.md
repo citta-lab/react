@@ -111,11 +111,12 @@ componentDidMount(){
 * setState to filter data
 ```javascript
 removeContact = (contact) => {
-   //removing from the local state
     this.setState((prevState) => ({
       contacts:prevState.contacts.filter((c) => c.id !== contact.id )
     }))
+  }
 ```
+
 Above filter will set new state with non matching user inputted contact id.
 
 * setState to trim
@@ -127,3 +128,80 @@ updateQuery = (query) => {
     }
 ```
 inserted values are trimmed for space and tabs
+
+6. onChange vs onBlur
+
+The idea behind when to use onChange vs onBlur is upto the developer, if they want UI rendering to happen for every key stroke the user punch in or they are interested only when the user cursor is out of focus. The later is more ideal. Below is the example snippet handling both,
+* In first example setState is called for every key stroke, so state change will trigger render and DOM will change with updated data.
+* In second example setState is called once the cursor is out of focus, state change happens at the end and render method is called once ( not always, depends on user input )
+
+```javascript
+//Component to explain onChange
+class Onchange extends React.Component {
+
+	state = {
+  	entry: ''
+  }
+
+  handleChange = ( event ) => {
+  	this.setState({
+    	entry:event.target.value
+    })
+     console.log(" onChange : "+this.state.entry)
+  }
+
+	render(){
+  	return(
+    	<div styles={{float : 'left', paddingRight : '5px',color:'blue'}}>
+      	<div> Input : </div>
+      	<input placeHolder="Add Entry" onChange={this.handleChange}/>
+      <br/>
+      You typed: <code>{this.state.entry}</code>
+      </div>
+    )
+  }
+}
+
+//Component to explain onBlur
+class Onblur extends React.Component {
+
+	state = {
+  	query: ''
+  }
+
+  handleBlur = ( event ) => {
+  	this.setState({
+    	query:event.target.value
+    })
+    console.log(" onBlur : "+this.state.query)
+  }
+
+	render(){
+  	return(
+    	<div>
+      	<div onBlur={this.handleBlur}> Input : </div>
+      	<input placeHolder="Add Entry" onBlur={this.handleBlur}/>
+        <br/>
+        You typed: <code>{this.state.query}</code>
+      </div>
+    )
+  }
+}
+
+//Component to hold both onChange and onBlur
+class App extends React.Component {
+	render(){
+  	return(
+    	<div>
+    	  <Onchange/>
+        <Onblur/>
+    	</div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+Reference:
+1. [How to "onchange" in ReactJS](https://www.peterbe.com/plog/onchange-in-reactjs)
+2. [What is the difference between onBlur and onChange attribute in HTML?](https://stackoverflow.com/questions/785099/what-is-the-difference-between-onblur-and-onchange-attribute-in-html)
