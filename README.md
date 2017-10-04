@@ -207,3 +207,9 @@ ReactDOM.render(<App />, mountNode);
 Reference:
 1. [How to "onchange" in ReactJS](https://www.peterbe.com/plog/onchange-in-reactjs)
 2. [What is the difference between onBlur and onChange attribute in HTML?](https://stackoverflow.com/questions/785099/what-is-the-difference-between-onblur-and-onchange-attribute-in-html)
+
+> A. Why does `value` to display state's initial value works fine on onChange but not onBlur ? `value` of the input element is tied to the react's state. If the value is changed, then state and input value element no longer tied to reach other as onBlur will only need to trigger on out of focus. So react prevents this happening by blocking the keyboard strokes.
+  Initial state value however can be displayed using defaultValue
+
+  7. ....
+  ------------------
