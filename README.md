@@ -208,8 +208,54 @@ Reference:
 1. [How to "onchange" in ReactJS](https://www.peterbe.com/plog/onchange-in-reactjs)
 2. [What is the difference between onBlur and onChange attribute in HTML?](https://stackoverflow.com/questions/785099/what-is-the-difference-between-onblur-and-onchange-attribute-in-html)
 
-> A. Why does `value` to display state's initial value works fine on onChange but not onBlur ? `value` of the input element is tied to the react's state. If the value is changed, then state and input value element no longer tied to reach other as onBlur will only need to trigger on out of focus. So react prevents this happening by blocking the keyboard strokes.
-  Initial state value however can be displayed using defaultValue
+> Why does `value` to display state's initial value works fine on onChange but not onBlur ?                 Answer: `value` of the input element is tied to the react's state. If the value is changed, then state and input value element no longer tied to reach other as onBlur will only need to trigger on out of focus. So react prevents this happening by blocking the keyboard strokes. Initial state value however can be displayed using defaultValue
 
-  7. ....
-  ------------------
+7. onChange in form ( vs onSubmit )
+------------------
+In React form's we can use `onChange` on every input element which we can leverage to handle the change on each element. If we need to handle once for all form element then we can use `onSubmit` however this might work for most of the scenario but field level immediate validation might be a problem. The workaround was to call same `onChange` method from all form element and can setState.
+
+```javascript
+class Hello extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      firstName: '', lastName: '', email: '', acceptTerms: false
+    }
+    this.handleInputChange = this.handleInputChange.bind(this)
+	}
+  handleInputChange(e){
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+        [name]: value
+    });
+}
+  render() {
+  	const { firstName, lastName, email, acceptTerms } = this.state;
+    return (
+    <div>
+        <form>
+            <input name="firstName" onChange={this.handleInputChange} value={firstName} />
+            <input name="lastName" onChange={this.handleInputChange} value={lastName} />
+            <input name="email" onChange={this.handleInputChange} value={email} />
+            <input type="checkbox" name="acceptTerms" onChange={this.handleInputChange} checked={acceptTerms} />
+        </form>
+        <hr/>
+        <div>{firstName}</div>
+        <div>{lastName}</div>
+        <div>{email}</div>
+        <div>{acceptTerms ? 'true':'false'}</div>
+        </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <Hello initialName="World"/>,
+  document.getElementById('container')
+);
+```
+Reference:
+1. [React - this.input.value vs handle change](https://stackoverflow.com/questions/46572616/react-this-input-value-vs-handle-change/46572702#comment80106399_46572702)
+2. [React Forms](https://www.sitepoint.com/work-with-forms-in-react/)
