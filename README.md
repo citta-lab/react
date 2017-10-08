@@ -216,7 +216,7 @@ updateQuery = (query) => {
 ```
 inserted values are trimmed for space and tabs
 
-6. onChange vs onBlur
+7. onChange vs onBlur
 ------------------
 The idea behind when to use onChange vs onBlur is upto the developer, if they want UI rendering to happen for every key stroke the user punch in or they are interested only when the user cursor is out of focus. The later is more ideal. Below is the example snippet handling both,
 * In first example setState is called for every key stroke, so state change will trigger render and DOM will change with updated data.
@@ -295,7 +295,7 @@ Reference:
 
 > Why does `value` to display state's initial value works fine on onChange but not onBlur ?                 Answer: `value` of the input element is tied to the react's state. If the value is changed, then state and input value element no longer tied to reach other as onBlur will only need to trigger on out of focus. So react prevents this happening by blocking the keyboard strokes. Initial state value however can be displayed using defaultValue
 
-7. onChange in form ( vs onSubmit )
+8. onChange in form ( vs onSubmit )
 ------------------
 In React form's we can use `onChange` on every input element which we can leverage to handle the change on each element. If we need to handle once for all form element then we can use `onSubmit` however this might work for most of the scenario but field level immediate validation might be a problem. The workaround was to call same `onChange` method from all form element and can setState.
 
