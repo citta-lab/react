@@ -24,7 +24,7 @@ class ContactList extends React.Component {
 ```
 > Component render everything we have in render method to virtual DOM ( a DOM completely different from actual HTML DOM). [The difference between Virtual DOM and DOM](http://reactkungfu.com/2015/10/the-difference-between-virtual-dom-and-dom/) has well explained about virtual DOM, DOM and HTML itself. If we want to dig more then [The Inner Workings Of Virtual DOM](https://medium.com/@rajaraodv/the-inner-workings-of-virtual-dom-666ee7ad47cf) has explained how it all works.
 
-Now you may ask do we have different types of Components ? yes we do. (i) Functional Component and (ii) Controlled Component. The example above has class definition and hence let us use local property `state`. On the other than Functional Component has all the benefits but the `state` cannot be accessed by it's definition. Below is the example of functional component,
+Now you may ask do we have different types of Components ? yes we do. (i) Functional Component and (ii) Controlled Component. The example above has class definition and hence let us use local property `state`. On the other that Functional Component has all the benefits but the `state` cannot be accessed by it's definition. Below is the example of functional component,
 
 ```javascript
 //functional component
@@ -39,6 +39,7 @@ const App = (props) => {
 
 ReactDOM.render(<App/>,mountNode);
 ```
+we can use stateless components inside stateful components, and vice versa. "Neither parent nor child components can know if a certain component is stateful or stateless, and they shouldn’t care whether it is defined as a function or a class."
 
 2. Component ( reuse ):
 ------------------
@@ -60,8 +61,8 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <ContactList contact={employee}/>
-        <ContactList contact={reader}/>
+        <ContactList contact={employee}/> //component called first time with first set of data
+        <ContactList contact={reader}/> //component called second time with different set of data
       </div>
     );
   }
@@ -73,6 +74,38 @@ In App component we have reused the `ContactList` twice and configure them indep
 
 3. State:
 ------------------
+As we mentioned earlier `state` is a local property of the component, and every user action trigger a state change and new rendering will begin to display the user with newly changed state. Though `state` is tied to component we need to initialize it explicitly, there are three way.
+[a]. Using react class
+```javascript
+var NameCheck = React.createClass({
+    getInitialState: function() {
+        return {name: 'Bob'};
+    }
+});
+```
+[b].Using ES6 class
+```javascript
+class NameCheck extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {name: 'Bob'};
+    }
+}
+```
+[c]. Using ES7 class
+```javascript
+class NameCheck extends React.Component {
+    state = {name: 'Bob'}; // no constructor or this key word
+}
+```
+we can declare `state` in ES7 outside of the constructor and without using `this` keyword. Thanks to it's Property initializers. [Use property initializers for cleaner code ](https://www.fullstackreact.com/articles/use-property-initializers-for-cleaner-react-components/) talks about the benefits with more detailed example.
+
+`State` must do:
+* Don't keep something in state that we don't use for rendering. Example: API subscriptions are better off as custom private fields or variables in external modules.
+* Don't hold state based on props calculation.
+* Don't duplicate data from props in state.
+* Don't create controlled component if component doesn't have to manage state.
+
 [Rendering Data in Component](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChild.md)
 
 Above document will take deep dive at state, props, how to leverage them and mutating and immutable concepts of state and props ( properties ) respectively.
@@ -115,7 +148,12 @@ ReactDOM.render(<App/>,mountNode);
 * setState is called and state value has been changed
 * setState re-triggers the render method and render() method id called with state.name value
 
-5. setState() [ useful functions ]
+5. setState
+-----------
+
+
+
+6. setState() [ useful functions ]
 ------------------
 There are few examples i fumbled into which we can refer to alter the data using setState are as mentioned below,
 
