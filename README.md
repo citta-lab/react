@@ -74,7 +74,8 @@ In App component we have reused the `ContactList` twice and configure them indep
 
 3. State:
 ------------------
-As we mentioned earlier `state` is a local property of the component, and every user action trigger a state change and new rendering will begin to display the user with newly changed state. Though `state` is tied to component we need to initialize it explicitly, there are three way.
+As we mentioned earlier `state` is a local property of the component, and every user action trigger a state change and new rendering will begin to display the user with newly changed state. Though `state` is tied to component we need to initialize it explicitly, there are three way.   
+
 [a]. Using react class
 ```javascript
 var NameCheck = React.createClass({
@@ -83,7 +84,7 @@ var NameCheck = React.createClass({
     }
 });
 ```
-[b].Using ES6 class
+[b]. Using ES6 class
 ```javascript
 class NameCheck extends React.Component {
     constructor(props) {
@@ -105,10 +106,9 @@ we can declare `state` in ES7 outside of the constructor and without using `this
 * Don't hold state based on props calculation.
 * Don't duplicate data from props in state.
 * Don't create controlled component if component doesn't have to manage state.
+* Don't mutate state.
 
-[Rendering Data in Component](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChild.md)
-
-Above document will take deep dive at state, props, how to leverage them and mutating and immutable concepts of state and props ( properties ) respectively.
+[Rendering Data in Component](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChild.md) document will take deep dive at state, props, how to leverage them and mutating and immutable concepts of state and props ( properties ) respectively.
 
 4. Render():
 ------------------
@@ -120,7 +120,7 @@ Render method in react should be kept as pure functions and responsible for hand
 import * as UserCall from `./UserAPI`
 class App extends React.Component {
 
-  // set to empty state
+  // set to empty state ( using property initializers )
   state = {
     name:[]
   }
@@ -148,10 +148,40 @@ ReactDOM.render(<App/>,mountNode);
 * setState is called and state value has been changed
 * setState re-triggers the render method and render() method id called with state.name value
 
-5. setState
+5. setState ( object style vs function style )
 -----------
+`setState` should be only place where initial state property should be changed. React process setState change request in batch process and they are asynchronous in nature. setState can be done in tow ways, one by passing an object and one by passing a callback function. It's always good practice to use the later one whenever the state change is depends on previous state.   
 
+[a]. setState() using object:
+```javascript
+state = {
+  company:'Google'
+}
 
+//based on user click changeCompany is called to change company name
+changeCompany = () => {
+  this.setState = {
+    company: 'Facebook'
+  }
+}
+```
+In above scenario let us say changeCompany is called on user onClick function [ `onClick={this.changeCompany}`] and setState is used to override the initialized state value.
+
+[b]. setState() using function:
+
+```javascript
+state = {
+  count:0
+}
+
+//based on user click changeCount is called
+changeCount = () => {
+  this.setState(prevState => ({
+    count: prevState.count +1
+  }));
+}
+```
+There are good discussion around when to use functional vs object setState and particularly [init state without constructor in react](https://stackoverflow.com/questions/42993989/init-state-without-constructor-in-react) talks about asynchronous behavior of the setState using object style and how we can fix it with callback functions. Also Sophia Shoemaker post on [Using a function in `setState` instead of an object](https://medium.com/@shopsifter/using-a-function-in-setstate-instead-of-an-object-1f5cfd6e55d1) explains a lot about functional setState.
 
 6. setState() [ useful functions ]
 ------------------
