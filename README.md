@@ -5,7 +5,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 
 1. Components
 ------------------
-Components are the way to dissect the application into smallest possible element which we can manage easily, When components are initialized react initiate the properties and we often call it `props`. Props can be used to communicate between components and meanwhile `state`'s are tied to the component and needs to be defined before using. Components let's us encapsulate, reuse and also configure them independently of each other is the main advantage.
+Components are the way to dissect the application into smallest possible element which we can manage easily, When components are initialized react initiate the properties and we often call it `props`. Props can be used to communicate between components and meanwhile `state`'s are tied to the component ( local property of that component ) and needs to be defined before using. Components let us encapsulate, reuse and also configure them independently of each other is the main advantage. So in short components are reusable building blocks of React application.
 
 ```javascript
 class ContactList extends React.Component {
@@ -21,6 +21,23 @@ class ContactList extends React.Component {
       )
   }
 }
+```
+> Component render everything we have in render method to virtual DOM ( a DOM completely different from actual HTML DOM). [The difference between Virtual DOM and DOM](http://reactkungfu.com/2015/10/the-difference-between-virtual-dom-and-dom/) has well explained about virtual DOM, DOM and HTML itself. If we want to dig more then [The Inner Workings Of Virtual DOM](https://medium.com/@rajaraodv/the-inner-workings-of-virtual-dom-666ee7ad47cf) has explained how it all works.
+
+Now you may ask do we have different types of Components ? yes we do. (i) Functional Component and (ii) Controlled Component. The example above has class definition and hence let us use local property `state`. On the other than Functional Component has all the benefits but the `state` cannot be accessed by it's definition. Below is the example of functional component,
+
+```javascript
+//functional component
+const App = (props) => {
+	return (
+  	<div>
+    	<div> Parent Component </div>
+    	<Card/> <!-- calling other component -->
+    </div>
+  );
+};
+
+ReactDOM.render(<App/>,mountNode);
 ```
 
 2. Component ( reuse ):
