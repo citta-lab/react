@@ -3,6 +3,8 @@ React [ juggling pebbles ]
 
 React is javascript library not a framework like AngularJS, Angular and most of the React coding can be done by just knowing javascript and JSX. People claim react reinvented the wheel ( facebook seems to have used php with in html ) by letting javascript and html work together instead of being treated independent entity web applications. JSX is fancy way of saying html and javascript together, this requires a transpiler named 'Babel' to convert this JSX to javascript.
 
+> if we are creating new app then we need to start by executing `sudo npm install -g create-react-app` where -g is global installation of create-react-app. In out next step we should be creating the app by executing `create-react-app firstreactapp`. 
+
 1. Components
 ------------------
 Components are the way to dissect the application into smallest possible element which we can manage easily, When components are initialized react initiate the properties and we often call it `props`. Props can be used to communicate between components and meanwhile `state`'s are tied to the component ( local property of that component ) and needs to be defined before using. Components let us encapsulate, reuse and also configure them independently of each other is the main advantage. So in short components are reusable building blocks of React application.
@@ -341,6 +343,35 @@ ReactDOM.render(
   document.getElementById('container')
 );
 ```
+
+9. Router ( Single Page Application )
+------------------
+[Single page apps in depth](http://singlepageappbook.com/goal.html) talks about SPA in details and React doesn't have this in built. So react training team has built a module which helps us achieve SPA in react apps. `React-Router` has been built for DOM and Native react application. Which is nothing but `<BrowserRouter/>` component implementation which leverages `history` library built by React training.         
+
+>The three main building blocks of react router are `<BrowserRouter>` component which will wrap the entire application for routing, `<Link>` component to take user action and load appropriate url and finally `<Route>` component to load appropriate page based on user action done through <Link> component.
+
+* install the module `npm install --save react-router-dom`.
+* Implement <BrowserRouter/>, which will listen to url changes and loads the appropriate page. Add details in index.js page.
+```javascript
+import { BrowserRouter } from 'react-router-dom' // need to import the BroswerRouter
+
+ReactDOM.render(
+  <BrowserRouter><App/><BrowserRouter/>, // this will implement BrowserRouter to entire app
+  document.getElementById('root')
+)
+```
+* More details about [history library](https://github.com/reacttraining/history) used by <BrowserRouter/>.
+* <Link/> component in react browser talks to <BrowserRouter> and changes the url according to user actions.
+* <Link/> needs to be imported before using by `import { Link } from 'react-router-dom'` and can be used like any other component <Link to='/create'>Add</Link>.`to` does the same job as `href` in anchor tag <a/>.
+* we can pass `pathname`, `state`, `query` etc in <Link/>. for more detail [Link](https://reacttraining.com/react-router/web/api/Link).
+* <Route/> component can be used two ways one by using render function whenever we need to pass props to the component which we are intended to load based on the user action, Example: `<Link path="/menu" render={()=>(<Menu list={this.state.menus})} />`. Other way is just calling the component by mentioning component={ComponentName}. Example: `<Link path="/about" component={About}/>`.
+
+10. Redux
+---------
+The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component. What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
+The complete [Redux]() is discussed here.
+
+
 Reference:
 1. [React - this.input.value vs handle change](https://stackoverflow.com/questions/46572616/react-this-input-value-vs-handle-change/46572702#comment80106399_46572702)
 2. [React Forms](https://www.sitepoint.com/work-with-forms-in-react/)
