@@ -3,7 +3,7 @@ React [ juggling pebbles ]
 
 React is javascript library not a framework like AngularJS, Angular and most of the React coding can be done by just knowing javascript and JSX. People claim react reinvented the wheel ( facebook seems to have used php with in html ) by letting javascript and html work together instead of being treated independent entity web applications. JSX is fancy way of saying html and javascript together, this requires a transpiler named 'Babel' to convert this JSX to javascript.
 
-> if we are creating new app then we need to start by executing `sudo npm install -g create-react-app` where -g is global installation of create-react-app. In out next step we should be creating the app by executing `create-react-app firstreactapp`. 
+> if we are creating new app then we need to start by executing `sudo npm install -g create-react-app` where -g is global installation of create-react-app. In out next step we should be creating the app by executing `create-react-app firstreactapp`.
 
 1. Components
 ------------------
@@ -368,8 +368,8 @@ ReactDOM.render(
 
 10. Redux
 ---------
-The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component. What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
-The complete [Redux]() is discussed here.
+The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component ( predictability in state ). What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
+The complete [Redux](https://github.com/citta-lab/react/tree/master/react-playground/redux) is discussed here.
 
 
 Reference:

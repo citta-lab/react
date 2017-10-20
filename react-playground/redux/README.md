@@ -57,3 +57,19 @@ function reducer (state = initialState , action) {
 }
 ```
 Above reducer function returns new object with updated user name.
+
+The Store:
+
+- install Redux
+```javascript
+npm install redux
+```
+- import redux and created reducer in main index.js
+```javascript
+import { createStore } from 'redux'
+import { reducer } from './reducers'
+```
+- create store by passing the reducer's created.
+```javascript
+const store = createStore(reducer)
+```
