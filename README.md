@@ -5,6 +5,26 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 
 > if we are creating new app then we need to start by executing `sudo npm install -g create-react-app` where -g is global installation of create-react-app. In out next step we should be creating the app by executing `create-react-app firstreactapp`.
 
+### Pointers
+
+1. Don't use { and " " together when embedding javascript expressions in an attribute. Example: `const element = <img src={"user.avatarUrl"}></img>;` will throw exception instead do `const element = <img src={user.avatarUrl}></img>;`
+2. JSX is closer to javascript than HTML. i.e use camelcase property name in place of `class` it will be `className` etc. Example: `<h1 className="greeting">`
+3. All JSX should return one element. i.e `const elelemt = <div> WorkBook </div> <h1> Title </h1>;` will throw an exception instead do `const elelemt = <div> <div> WorkBook </div> <h1> Title </h1> </div>;`
+4. XSS Prevention: React DOM escapes any values embedded in JSX before rendering.
+5. What is React Element ? An element describes what we want to see on the screen ( these are not DOM elements ). Example: `const element = <h1>Hello, Roger</h1>;` What is Component ? Component is made of these react elements.
+6. Components are isolated piece of code which accepts `pops` as inputs and returns react elements. So it's fair to say Components are made up of elements.
+7. Always start component names with Uppercase. Example: `Welcome instead of welcome`.React treats components starting with lowercase letters as DOM tags.
+8. `props` is a single property used in component. This holds everything the component needs to render.
+9. All React components must act like pure functions with respect to their props.
+10. Two ways we can implement components. Functional components which has just the `props` which is used to render data to the UI. and Class components which has both `props` and `state`.
+11. We always need to declare `props` in class component constructor. "Class components should always call the base constructor with props".
+
+
+
+
+
+
+
 1. Components
 ------------------
 Components are the way to dissect the application into smallest possible element which we can manage easily, When components are initialized react initiate the properties and we often call it `props`. Props can be used to communicate between components and meanwhile `state`'s are tied to the component ( local property of that component ) and needs to be defined before using. Components let us encapsulate, reuse and also configure them independently of each other is the main advantage. So in short components are reusable building blocks of React application.
@@ -370,6 +390,67 @@ ReactDOM.render(
 ---------
 The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component ( predictability in state ). What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
 The complete [Redux](https://github.com/citta-lab/react/tree/master/react-playground/redux) is discussed here.
+
+11. Convert Functional to Class Component
+In the first example we will look into displaying Hello
+--------
+11.1 Functional:
+```javascript
+function Employee(props) {
+  return (
+    //body
+  );
+}
+
+ReactDOM.render(
+    <Employee name="Bob" />,
+    document.getElementById('root')
+);
+```
+11.2 Body
+```javascript
+<div>
+    <h1>Hello, {props.name}</h1>
+</div>
+```
+In this scenario we will see "Hello Bob". When we move to class component we expect the same results as well.
+
+11.3 Class:
+```javascript
+class Employee extends React.Component {
+  render() {
+    return (
+      <div>
+          <h1>Hello, {this.props.name}</h1> //this.props is added instead of just props
+      </div>
+  );
+  }
+}
+// same ReactDOM.render function is used
+```
+11.4 Moving to State:
+
+```javascript
+class Employee extends React.Component {  
+  constructor(props){
+  super(props);
+  this.state = {"name":"Bob"};
+  }
+
+  render() {
+      return (
+      <div>
+        <h1> hello {this.state.name}</h1>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+<Employee />,
+document.getElementById('root')
+);
+```
 
 
 Reference:
