@@ -20,10 +20,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 11. We always need to declare `props` in class component constructor. "Class components should always call the base constructor with props".
 
 
-
-
-
-
+### Deep Dive
 
 1. Components
 ------------------
