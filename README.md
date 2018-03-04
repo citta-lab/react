@@ -18,6 +18,18 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 9. All React components must act like pure functions with respect to their props.
 10. Two ways we can implement components. Functional components which has just the `props` which is used to render data to the UI. and Class components which has both `props` and `state`.
 11. We always need to declare `props` in class component constructor. "Class components should always call the base constructor with props".
+12. 'lifecycle hooks' are used to control the particular piece of code to execute in the beginning of DOM loading or cleaning once the DOM is removed. Example: `componentDidMount()` and `componentWillUnmount()`.
+13. If you don’t use something in render(), it shouldn’t be in the state.
+14. In JavaScript, true && expression always evaluates to expression, and false && expression always evaluates to false. Example: ` {10 < 100 && <h1> The number is less than $100 </h1>}`.
+15. Inline if-else, `<div> The user is <b>{isLoggedIn ? 'currently' : 'not'}</b> logged in </div>`.
+16. Return `null` in the component if we don't want to render the called component. "Returning null from a component’s render method does not affect the firing of the component’s lifecycle methods".
+17. In rendering array or list React needs `key` to evaluate if the value is changed to re-render. Always use item `id` as the `key`, if `id` is not present use it's index as last resort. Also `key` act as hint to React and doesn't pass down to react component. i.e we can't access `key` in component like `props.key`.
+18. Correct usage of `key`: Rule of thump, elements inside the map() call need keys.
+19. `handleChange` runs on every keystroke to update the React state.
+20. `Controlled Component`, This is used to avoid usage of default `html` forms. Instead of relying on html form element state we control form element state via React using `handleChange` function. By using this each element in the forms will have it's own handleChange function, so we can control and/or validate user input explicitly.
+21. Most popular convention, which is to prefix the event handler with the word `handle` to distinguish it from regular class methods. Example: `handleClick` and/or `handleSubmit` and/or `handleChange`.
+22. Always use function definition in React to call the function instead of results. i.e don't use `()` at the end of the function name. Example: `onSubmit={this.handleSubmit}` instead of `onSubmit={this.handleSubmit()}`
+23. Callback function such as `handleSubmit` or `handleClick` or `handleChange` or any class methods needs to be bind to `this` in the component `constructor` to work. Example: `this.handleSubmit = this.handleSubmit.bind(this);`
 
 
 ### Deep Dive
@@ -128,6 +140,16 @@ we can declare `state` in ES7 outside of the constructor and without using `this
 * Don't mutate state.
 
 [Rendering Data in Component](https://github.com/citta-lab/react/blob/master/react-playground/renderingDatainParentChild.md) document will take deep dive at state, props, how to leverage them and mutating and immutable concepts of state and props ( properties ) respectively.
+
+3.1 State Mantra's :
+* Never call `this.state` directly except in the constructor for initial state. Always use `this.setState();` once the state is initialized.
+* `setState();` are batched together and updated as single update by React. So we should not rely on their values for calculating the next state. Same goes with the `props`.
+* `setState();` merges the object with current state. So if the initial state has multiple attributes we can update any or all of the attributes of the state.
+* `state` is local and encapsulated to each component. parent and/or child components doesn't know each others state. Every component owns it's own `state`.
+
+If each component owns it's own date then how can we pass parent component state to it's child component ? Ah, through `props`. Remember `props` aka property is not unique to the component. So we can pass state like `<h1> sending my data {{this.state.name}} </h1>` or `<h1> sending my data name={{this.state.name}} </h1>`.
+
+> imagine a component tree as a waterfall of props, each component’s state is like an additional water source that joins it at an arbitrary point but also flows down.
 
 4. Render():
 ------------------
@@ -429,9 +451,9 @@ class Employee extends React.Component {
 
 ```javascript
 class Employee extends React.Component {  
-  constructor(props){
-  super(props);
-  this.state = {"name":"Bob"};
+  constructor(props){ //first thing called when Employee is called.
+  super(props); //should always call the base constructor with props.
+  this.state = {"name":"Bob"}; //initial data declaration.
   }
 
   render() {
@@ -444,10 +466,26 @@ class Employee extends React.Component {
 }
 
 ReactDOM.render(
-<Employee />,
+<Employee/>,
 document.getElementById('root')
 );
 ```
+
+12. React Forms
+---------
+HTML forms mutate the form elements by itself which will cause problem in React world by having different state between the `view` and the `state`. The while idea of state management is to keep the view and state in synch, and have one directional flow (i.e view will always get updated from the state). In Angular 1, the state management was bidirectional and we could have updated state wither from model to view and/or view to model.
+
+>> Keep React’s render() as close to the real DOM as possible, and that includes the data in the form elements.
+
+The best practice is to implement the following things to sync the internal state,
+12.1 Define elements in `render()` using values from internal state. Not hardcode the value in the form element how we typically do in html forms. Example: ` <input type="text" name="title" value="Bob"/>` is bad vs doing `<input type="text" name="title" value="{this.state.value}" />`.Specifying the value prop on a controlled component prevents the user from changing the input unless you desire so.
+12.2 Capture change using React's `onChange()`. Typically HTML form's `onChange()` is only fired when element is out of focus or pressing tab where React's `onChange()` is triggered for every keystroke.
+12.3 Update internal state in event handler. Example: `handleChange(event){ this.setState({title: event.target.value})}`.
+12.4 React recommends using `onChange` over `onInput` which fires on each change.The reason is that React’s onChange wrapper behavior provides consistency.
+12.5 Use React form's `onSubmit` over HTML for submit. Example: ` <form onSubmit={this.handleSubmit}> ..</form>`.
+
+Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/). 
+
 
 
 Reference:
