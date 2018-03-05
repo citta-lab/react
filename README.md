@@ -34,7 +34,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 
 ### Deep Dive
 
-1. Components
+#### 1. Components
 ------------------
 Components are the way to dissect the application into smallest possible element which we can manage easily, When components are initialized react initiate the properties and we often call it `props`. Props can be used to communicate between components and meanwhile `state`'s are tied to the component ( local property of that component ) and needs to be defined before using. Components let us encapsulate, reuse and also configure them independently of each other is the main advantage. So in short components are reusable building blocks of React application.
 
@@ -72,7 +72,7 @@ ReactDOM.render(<App/>,mountNode);
 ```
 we can use stateless components inside stateful components, and vice versa. "Neither parent nor child components can know if a certain component is stateful or stateless, and they shouldn’t care whether it is defined as a function or a class."
 
-2. Component ( reuse ):
+#### 2. Component ( reuse ):
 ------------------
 ContactList component define the data rendering and presenting it to the virtual dom, we can reuse this component to output different values based on what we configure in our main app component.
 
@@ -103,7 +103,7 @@ ReactDOM.render(<App/>,mountNode);
 ```
 In App component we have reused the `ContactList` twice and configure them independently of each other to set different data values.
 
-3. State:
+#### 3. State:
 ------------------
 As we mentioned earlier `state` is a local property of the component, and every user action trigger a state change and new rendering will begin to display the user with newly changed state. Though `state` is tied to component we need to initialize it explicitly, there are three way.   
 
@@ -151,7 +151,7 @@ If each component owns it's own date then how can we pass parent component state
 
 > imagine a component tree as a waterfall of props, each component’s state is like an additional water source that joins it at an arbitrary point but also flows down.
 
-4. Render():
+#### 4. Render():
 ------------------
 Render method in react should be kept as pure functions and responsible for handling the request to DOM and nothing else. We can always add data call such has API / Ajax request inside the render but it will hinder the performance and divert from the design pattern. So to access / fetch data from the API and then manage these data via component state ( managing component data via state is called controlled component ) can be achieved using react's lifecycle hooks.
 * ComponentWillMount ( checks before component's render method mounted to the DOM )
@@ -189,7 +189,7 @@ ReactDOM.render(<App/>,mountNode);
 * setState is called and state value has been changed
 * setState re-triggers the render method and render() method id called with state.name value
 
-5. setState ( object style vs function style )
+#### 5. setState ( object style vs function style )
 -----------
 `setState` should be only place where initial state property should be changed. React process setState change request in batch process and they are asynchronous in nature. setState can be done in tow ways, one by passing an object and one by passing a callback function. It's always good practice to use the later one whenever the state change is depends on previous state.   
 
@@ -224,7 +224,7 @@ changeCount = () => {
 ```
 There are good discussion around when to use functional vs object setState and particularly [init state without constructor in react](https://stackoverflow.com/questions/42993989/init-state-without-constructor-in-react) talks about asynchronous behavior of the setState using object style and how we can fix it with callback functions. Also Sophia Shoemaker post on [Using a function in `setState` instead of an object](https://medium.com/@shopsifter/using-a-function-in-setstate-instead-of-an-object-1f5cfd6e55d1) explains a lot about functional setState.
 
-6. setState() [ useful functions ]
+#### 6. setState() [ useful functions ]
 ------------------
 There are few examples i fumbled into which we can refer to alter the data using setState are as mentioned below,
 
@@ -383,7 +383,7 @@ ReactDOM.render(
 );
 ```
 
-9. Router ( Single Page Application )
+#### 9. Router ( Single Page Application )
 ------------------
 [Single page apps in depth](http://singlepageappbook.com/goal.html) talks about SPA in details and React doesn't have this in built. So react training team has built a module which helps us achieve SPA in react apps. `React-Router` has been built for DOM and Native react application. Which is nothing but `<BrowserRouter/>` component implementation which leverages `history` library built by React training.         
 
@@ -405,12 +405,12 @@ ReactDOM.render(
 * we can pass `pathname`, `state`, `query` etc in <Link/>. for more detail [Link](https://reacttraining.com/react-router/web/api/Link).
 * <Route/> component can be used two ways one by using render function whenever we need to pass props to the component which we are intended to load based on the user action, Example: `<Link path="/menu" render={()=>(<Menu list={this.state.menus})} />`. Other way is just calling the component by mentioning component={ComponentName}. Example: `<Link path="/about" component={About}/>`.
 
-10. Redux
+#### 10. Redux
 ---------
 The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component ( predictability in state ). What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
 The complete [Redux](https://github.com/citta-lab/react/tree/master/react-playground/redux) is discussed here.
 
-11. Convert Functional to Class Component
+#### 11. Convert Functional to Class Component
 In the first example we will look into displaying Hello
 --------
 11.1 Functional:
@@ -483,7 +483,6 @@ The best practice is to implement the following things to sync the internal stat
 * Update internal state in event handler. Example: `handleChange(event){ this.setState({title: event.target.value})}`.      
 * React recommends using `onChange` over `onInput` which fires on each change.The reason is that React’s onChange wrapper behavior provides consistency.       
 * Use React form's `onSubmit` over HTML for submit. Example: ` <form onSubmit={this.handleSubmit}> ..</form>`.      
-
 
 Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/).
 
