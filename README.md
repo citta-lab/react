@@ -488,6 +488,12 @@ The best practice is to implement the following things to sync the internal stat
 Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/).
 
 
+13. Single Source of Truth ( keep state in parent )
+---------
+Each component has it's own `state`, so if we ever want to calculate something on component one (c1) based on component two (c2) then it would be hard to keep data in synch as they have their own state. So the best and easiest way is to `lift their state` to the parent and this will become as `single source of truth` and both c1 and c2 will refer from here. Sending state value to it's child component c1 and c2 can be done by well known `props`. `setState()` will only be called at the parent.
+
+
+
 
 Reference:
 1. [React - this.input.value vs handle change](https://stackoverflow.com/questions/46572616/react-this-input-value-vs-handle-change/46572702#comment80106399_46572702)
