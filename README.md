@@ -471,7 +471,7 @@ document.getElementById('root')
 );
 ```
 
-12. React Forms
+#### 12. React Forms
 ---------
 HTML forms mutate the form elements by itself which will cause problem in React world by having different state between the `view` and the `state`. The while idea of state management is to keep the view and state in synch, and have one directional flow (i.e view will always get updated from the state). In Angular 1, the state management was bidirectional and we could have updated state wither from model to view and/or view to model.
 
@@ -488,7 +488,7 @@ The best practice is to implement the following things to sync the internal stat
 Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/).
 
 
-13. Single Source of Truth ( keep state in parent )
+#### 13. Single Source of Truth ( keep state in parent )
 ---------
 Each component has it's own `state`, so if we ever want to calculate something on component one (c1) based on component two (c2) then it would be hard to keep data in synch as they have their own state. So the best and easiest way is to `lift their state` to the parent and this will become as `single source of truth` and both c1 and c2 will refer from here. Sending state value to it's child component c1 and c2 can be done by well known `props`. `setState()` will only be called at the parent.
 
