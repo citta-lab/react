@@ -478,12 +478,12 @@ HTML forms mutate the form elements by itself which will cause problem in React 
 >> Keep React’s render() as close to the real DOM as possible, and that includes the data in the form elements.
 
 The best practice is to implement the following things to sync the internal state,      
-12.1 Define elements in `render()` using values from internal state. Not hardcode the value in the form element how we typically do in html forms. Example: ` <input type="text" name="title" value="Bob"/>` is bad vs doing `<input type="text" name="title" value="{this.state.value}" />`.Specifying the value prop on a controlled component prevents the user from changing the input unless you desire so.        
-12.2 Capture change using React's `onChange()`. Typically HTML form's `onChange()` is only fired when element is out of focus or pressing tab where React's `onChange()` is triggered for every keystroke.     
-12.3 Update internal state in event handler. Example: `handleChange(event){ this.setState({title: event.target.value})}`.      
-12.4 React recommends using `onChange` over `onInput` which fires on each change.The reason is that React’s onChange wrapper behavior provides consistency.       
-12.5 Use React form's `onSubmit` over HTML for submit. Example: ` <form onSubmit={this.handleSubmit}> ..</form>`.      
-        
+* Define elements in `render()` using values from internal state. Not hardcode the value in the form element how we typically do in html forms. Example: ` <input type="text" name="title" value="Bob"/>` is bad vs doing `<input type="text" name="title" value="{this.state.value}" />`.Specifying the value prop on a controlled component prevents the user from changing the input unless you desire so.        
+* Capture change using React's `onChange()`. Typically HTML form's `onChange()` is only fired when element is out of focus or pressing tab where React's `onChange()` is triggered for every keystroke.     
+* Update internal state in event handler. Example: `handleChange(event){ this.setState({title: event.target.value})}`.      
+* React recommends using `onChange` over `onInput` which fires on each change.The reason is that React’s onChange wrapper behavior provides consistency.       
+* Use React form's `onSubmit` over HTML for submit. Example: ` <form onSubmit={this.handleSubmit}> ..</form>`.      
+
 
 Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/).
 
