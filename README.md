@@ -568,8 +568,10 @@ Now in `render(){ .... }` method we would have below code,
 render(){
   // ewww, going through each array index and sending as props.
   let personElement = (
-    <Person name={this.state.persons[0].name} age={this.state.persons[0].age} show={this.state.persons[0].show} />
-    <Person name={this.state.persons[1].name} age={this.state.persons[1].age} show={this.state.persons[1].show}/>
+    <Person name={this.state.persons[0].name}
+    age={this.state.persons[0].age} show={this.state.persons[0].show} />
+    <Person name={this.state.persons[1].name}
+    age={this.state.persons[1].age} show={this.state.persons[1].show}/>
   )
 
   return(
