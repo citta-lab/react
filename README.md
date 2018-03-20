@@ -30,6 +30,13 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 21. Most popular convention, which is to prefix the event handler with the word `handle` to distinguish it from regular class methods. Example: `handleClick` and/or `handleSubmit` and/or `handleChange`.
 22. Always use function definition in React to call the function instead of results. i.e don't use `()` at the end of the function name. Example: `onSubmit={this.handleSubmit}` instead of `onSubmit={this.handleSubmit()}`
 23. Callback function such as `handleSubmit` or `handleClick` or `handleChange` or any class methods needs to be bind to `this` in the component `constructor` to work. Example: `this.handleSubmit = this.handleSubmit.bind(this);`
+24. React `props` should always treated as read only except in the place it was originally created. `you should consider props read only for the component they belong to, and change them only from the component that created them` by Hack with React.
+25. Use composition over inheritance in React. Treat each modules as independent components and use them together when needed instead of inheriting from the parent. i.e Use `class Child extends React.Component` vs `class Child extends Parent`. This will enforce all components are inherited from the `React.Component` but later composition is used to make it work together. (Reference in attached in the Reference section).
+26. Why do we use callback function to update the state ? Because state should always update it's own `state` so sending `callback` function from parent to child component and updating the data in the actual parent component.
+27. React thinks `<hello />` is an HTML tag because it's not capitalized. So react component needs to starts with capitalized letter like `<Hello />`.
+28. `...` spread operator. We can pass `props` object using spread operator instead of passing individually. Example: In `const props = {firstName: 'Ben', lastName: 'Hector'};` we can do `<Greeting {...props} />;`.
+29. Each html tags, component tags are converted using `React.createElelement` before rendering it to the UI. Example: `return React.createElelement('div', {className: 'App'}, React.createElelement('h1', null, 'React App Test'));`. Here we must at least pass 3 or more parameters.
+30. Accessing text/elements between opening and closing of the component can be done by using `props.children`. i.e `<Person name="Bob"> Watchman </Person>` Watchman can be accessed in `Person` component as `{props.children}`.
 
 
 ### Deep Dive
@@ -412,7 +419,7 @@ The complete [Redux](https://github.com/citta-lab/react/tree/master/react-playgr
 
 #### 11. Convert Functional to Class Component
 In the first example we will look into displaying Hello
---------
+
 11.1 Functional:
 ```javascript
 function Employee(props) {
@@ -489,11 +496,111 @@ Form implementation can also be done using uncontrolled component, further discu
 
 #### 13. Single Source of Truth ( keep state in parent )
 ---------
-Each component has it's own `state`, so if we ever want to calculate something on component one (c1) based on component two (c2) then it would be hard to keep data in synch as they have their own state. So the best and easiest way is to `lift their state` to the parent and this will become as `single source of truth` and both c1 and c2 will refer from here. Sending state value to it's child component c1 and c2 can be done by well known `props`. `setState()` will only be called at the parent.
+>> "Understand how to handle state in React way before thinking about Flux, Redux"
 
+Each component has it's own `state`, so if we ever want to calculate something on component one (c1) based on component two (c2) then it would be hard to keep data in synch as they have their own state. So the best and easiest way is to `lift their state` to the parent and this will become the `single source of truth` and both c1 and c2 will refer from here. Sending state value to it's child component c1 and c2 can be done by well known `props`. `setState()` will only be called at the parent.
 
+>> don’t keep state calculated from props, neither state that isn’t used in the render() method
+
+#### 14. Setting up Debugger (Debugging with VSCode)
+----------
+* Install extensions `Debugger for Chrome` from Microsoft (Extensions in Activity Panel).
+* Click on Debug Icon from left panel (Activity Panel).
+* Create `launch.json` by clicking Configure icon from top panel (Debug View).
+* Edit the generated `launch.json` or replace with below,
+```json
+{
+    "version": "0.2.0",
+    "configurations": [{
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceRoot}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    }]
+}
+```
+* Run the app by executing `npm run dev` (Terminal).
+* Click Start Debugging (Debug View) [ you might have to reopen the chrome browser ].
+* Reference [link](https://code.visualstudio.com/docs/editor/debugging) for more details.
+
+#### 15. Styling
+------
+Need to declare `.css` file and add css file name same as css class name and add this to the div event where we need to add. This will be recognized by the webpack and adds it to the final html in the DOM.
+```javascript
+// file name of this css is People.css
+.People{
+  color: yellow,
+  font: 12px,
+}
+
+//add this in the component file where we need to have this color change
+import './People.css'
+
+//declare this `People` as className in the div of the component
+<div className="People">
+  <button onclick={this.handleClick}> click </button>
+</div>
+```
+OR we can also add inline styling by simply adding `<button style={style}>click</button>`. where style is `const style = { font: 'inherit', color: red}`.
+
+#### 16. Handling Array / List of data in Component
+----
+If we are coming from Angularjs or Angualr then we used to populate list of data to the DOM using inbuilt directives such as `ng-repeat` or `ngFor` respectively. However in react everything is javascript so we can make use of it to populate the data in component.
+
+Lets extract state from the code snippet to simplify the difference, so the state in class type component constructor looks like below,
+```javascript
+this.state = {
+  persons: [
+    {name: "Mahesh", age: 30, show: false},
+    {name: "Bob", age: 45, show: false},
+    {name: "Jon", age: 21, show: false},
+  ]
+}
+```
+Now in `render(){ .... }` method we would have below code,
+
+16.1 Yucky way:
+```javascript
+render(){
+  // ewww, going through each array index and sending as props.
+  let personElement = (
+    <Person name={this.state.persons[0].name} age={this.state.persons[0].age} show={this.state.persons[0].show} />
+    <Person name={this.state.persons[1].name} age={this.state.persons[1].age} show={this.state.persons[1].show}/>
+  )
+
+  return(
+    <div>
+      {personElement}
+    </div>
+  );
+}
+```
+
+16.2 Preferred way:
+Hence we can write javascript inside render and render is called every time the state is changed we can make use of this to generate a list of components with each array element data as props using javascript map function.
+```javascript
+render(){
+
+  let personElement = this.state.persons.map((person,index) => {
+    return <Person name={person.name} age={person.age} show={person.show}/>
+  })
+
+  return (
+    <div>
+      {personElement}
+    </div>
+  );
+}
+```
+Oh i added index as second element which i can use if needed but in our example we don't need so it can be simply `person => { return ...... }`.
 
 
 Reference:
 1. [React - this.input.value vs handle change](https://stackoverflow.com/questions/46572616/react-this-input-value-vs-handle-change/46572702#comment80106399_46572702)
 2. [React Forms](https://www.sitepoint.com/work-with-forms-in-react/)
+3. [React How To](https://github.com/petehunt/react-howto)
+4. [Composition vs Inheritance](http://blog.brew.com.hk/react-101-composition-vs-inheritance/)
