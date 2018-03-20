@@ -583,6 +583,7 @@ render(){
 ```
 
 16.2 Preferred way:
+      
 Hence we can write javascript inside render and render is called every time the state is changed we can make use of this to generate a list of components with each array element data as props using javascript map function.
 ```javascript
 render(){
