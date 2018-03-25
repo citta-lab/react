@@ -37,6 +37,11 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 28. `...` spread operator. We can pass `props` object using spread operator instead of passing individually. Example: In `const props = {firstName: 'Ben', lastName: 'Hector'};` we can do `<Greeting {...props} />;`.
 29. Each html tags, component tags are converted using `React.createElelement` before rendering it to the UI. Example: `return React.createElelement('div', {className: 'App'}, React.createElelement('h1', null, 'React App Test'));`. Here we must at least pass 3 or more parameters.
 30. Accessing text/elements between opening and closing of the component can be done by using `props.children`. i.e `<Person name="Bob"> Watchman </Person>` Watchman can be accessed in `Person` component as `{props.children}`.
+31. Two ways of calling function in list. Example 1: `onClick={this.handleClick.bind(this,index)}` or Example 2: `onClick={()=>{this.handleClick(index)}}`.
+32. Slice or Spread Operator: If we want to copy the array before manipulating then we can either `slice` before performing action or copy the objects using `[...array]`. Example: `const newArray = this.state.people.slice();` or `const newArray = [...this.state.people];`.
+33. Splice vs Splice : we can copy the object using `slice()` however we can remove element inside an array using `Splice()`. So often we use splice on an array to create new array and splice on the new array to removed the element. This avoids `mutating` the original array.
+34. Why do we need `key` property while rendering the DOM ? : If we don't mention the `key` while rendering list of components then react will always re-render the whole list and compare with the virtual dom. However if we use `key` property in the list then react will only render the components associated with the key and hence the computational work is less.
+35. Using `index` vs `id` in KEY: Typically index is always part of the list and any alteration to the data-set will result in change in `index` so it is not really unique with respect to React. So having / using `id` of an element helps the React much better. Example: `<BuildingHome key={eachHome.id} name={eachHome.name} price={eachHome.price}/>`is bette than using key like `<BuildingHome key={index} name={eachHome.name} price={eachHome.price}/>`.
 
 
 ### Deep Dive
@@ -555,9 +560,9 @@ Lets extract state from the code snippet to simplify the difference, so the stat
 ```javascript
 this.state = {
   persons: [
-    {name: "Mahesh", age: 30, show: false},
-    {name: "Bob", age: 45, show: false},
-    {name: "Jon", age: 21, show: false},
+    {id: "01", name: "Mahesh", age: 30, show: false},
+    {id: "02", name: "Bob", age: 45, show: false},
+    {id: "03", name: "Jon", age: 21, show: false},
   ]
 }
 ```
@@ -583,7 +588,7 @@ render(){
 ```
 
 16.2 Preferred way:
-      
+
 Hence we can write javascript inside render and render is called every time the state is changed we can make use of this to generate a list of components with each array element data as props using javascript map function.
 ```javascript
 render(){
@@ -600,6 +605,43 @@ render(){
 }
 ```
 Oh i added index as second element which i can use if needed but in our example we don't need so it can be simply `person => { return ...... }`.
+
+16.3 Change value in Array of objects.
+
+persons in state has array of person ( i.e array of objects ). If we need to handle changing name of the person based on user input in text box then we need to capture `event` and `id` or `index` value of the element. Later update the `copied` persons object and merge to the actual person in state using `setState`. Lets take a look one by one,
+
+Input Text (in Child Component):     
+
+```javascript
+// this is declared in child component, hence value to display is passed as props.
+<input value={props.name} onChange={this.callHandleNameChange} />
+```
+Parent component:    
+```javascript
+// DOM event is passed from ChildComponent along with the id of the person, we could also pass index instead.
+<ChildComponent name={this.state.person.name} callHandleNameChange={(event) => {this.handleNameChange(event, person.id)}} />
+```
+handleNameChange ( in Parent Component):  
+ ```javascript
+handleNameChange = (event, personId) => {
+
+  // this will return matching personIndex from personId
+  const personIndex = this.state.persons.findIndex((p) => return p.id == personId);
+  // extract just person belongs to personIndex, output would be changed person object {"id": "02", "name": "newChangedName", "show": "false"}.
+  const changedPerson = {...this.state.person[personIndex]};
+  // extract value
+  const changeNameValue = event.target.value;
+  // change person name as per user typed value.
+  changedPerson.name = changeNameValue;
+  // copy persons ( avoid mutating ) and merge altered changedPerson object.
+  const copyPersons = [ ...this.state.persons];
+  copyPersons[personIndex] = changedPerson;
+  // now we have entire persons array of objects with changed value in copyPersons.
+  this.setState({ persons: copyPersons});
+}
+
+ ```
+
 
 
 Reference:
