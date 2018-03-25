@@ -618,25 +618,32 @@ Input Text (in Child Component):
 ```
 Parent component:    
 ```javascript
-// DOM event is passed from ChildComponent along with the id of the person, we could also pass index instead.
-<ChildComponent name={this.state.person.name} callHandleNameChange={(event) => {this.handleNameChange(event, person.id)}} />
+// DOM event is passed from ChildComponent along with the id of the person,
+//we could also pass index instead.
+<ChildComponent name={this.state.person.name}
+callHandleNameChange={(event) => {this.handleNameChange(event, person.id)}} />
 ```
 handleNameChange ( in Parent Component):  
  ```javascript
 handleNameChange = (event, personId) => {
+  /*
+     1. personIndex: this will return matching personIndex from personId
+     2. changedPerson : extract just person belongs to personIndex, output would be changed
+        person object {"id":   "02", "name": "newChangedName", "show": "false"}.
+     3. changeNameValue: extract user typed value from DOM event.
+     4. changedPerson.name : change person name as per user typed value.
+     5. copyPersons: copy persons ( avoid mutating ) from state using spread operator.
+     6. copyPersons[personIndex]: merge altered changedPerson object with copied person using personIndex.
+     7. setState: now we have entire persons array of objects with changed value in copyPersons, so copying
+        copyPersons to persons.
+  */
 
-  // this will return matching personIndex from personId
   const personIndex = this.state.persons.findIndex((p) => return p.id == personId);
-  // extract just person belongs to personIndex, output would be changed person object {"id": "02", "name": "newChangedName", "show": "false"}.
   const changedPerson = {...this.state.person[personIndex]};
-  // extract value
   const changeNameValue = event.target.value;
-  // change person name as per user typed value.
   changedPerson.name = changeNameValue;
-  // copy persons ( avoid mutating ) and merge altered changedPerson object.
   const copyPersons = [ ...this.state.persons];
   copyPersons[personIndex] = changedPerson;
-  // now we have entire persons array of objects with changed value in copyPersons.
   this.setState({ persons: copyPersons});
 }
 
