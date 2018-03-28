@@ -685,30 +685,36 @@ handleNameChange = (event, personId) => {
 
 #### 17. Higher Order Component
 
-There are different ways we can leverage higher order components which can simply wraps the child or app components and pass the respective props and/or states depending on the higher order component definition.                                                                                                                   Why do we need higher order components ? return method in react needs return jsx wrapped with in one element. Most often we wrap with `<div> ... </div>` or return other component `<ChildComponent />` or use fragments like `<> ... </>` or `<React.Fragment> ... </React.Fragment>`. Alternative way to above all is writing simple higher order components which takes props and return to it's children as declared in 17.1 example.
+There are different ways we can leverage higher order components which can simply wraps the child or app components and pass the respective props and/or states depending on the higher order component definition.                                                                                                                       
+ Why do we need higher order components ? return method in react needs return jsx wrapped with in one element. Most often we wrap with `<div> ... </div>` or return other component `<ChildComponent />` or use fragments like `<> ... </>` or `<React.Fragment> ... </React.Fragment>`. Alternative way to above all is writing simple higher order components which takes props and return to it's children as declared in 17.1 example.
 
-17.1 Custom Simple HOC
+##### 17.1 Custom Simple HOC          
 In this higher order component we simply take the passed props and send it to it's children without any alteration. Please do notice it doesn't even require `React` to be imported as it's simple ES6 code.
 
 Definition:
 ```javascript
+// this is SimpleWrapper.js
 const simpleWrapper = (props) => props.children;
 export default simpleWrapper;
 ```
 Usage:
 ```javascript
+// this is App.js
+import SimpleWrapper from './SimpleWrapper'
+....
 return (
-  <simpleWrapper>
-  .....
-  </simpleWrapper>
+  <SimpleWrapper>
+    .....
+  </SimpleWrapper>
 )
 ```
 
-17.2 Custom Advance HOC
+##### 17.2 Custom Advance HOC        
 Simple HOC is doing nothing but acting as wrapper and hence avoided using extra `<div>` complexity in the jsx. However if we have return function with customized div such as `<div className={styleChildren}> ... </div>` then we might need a extracted higher order component which can be leveraged one or many div's of same scenario.
 
 Definition:
 ```javascript
+//this is WithClass.js
 import React from 'react';
 const withClass = (props) => {
   return (
@@ -723,6 +729,7 @@ export default withClass;
 
 Usage:
 ```javascript
+//this is App.js
 import WithClass from './WithClass'
 //... code
 return (
@@ -732,11 +739,12 @@ return (
 )
 ```
 
-17.3 Configurable Advance HOC           
+##### 17.3 Configurable Advance HOC               
 Instead of leveraging just the `<div>` we can make higher order function (not a component ) more flexible which in turn returns wrapped component in customized way.
 
 Definition:
 ```javascript
+// this is withClass.js
 import React from 'react'
 
 const withClass = (WrappedComponent, className) => {
@@ -753,15 +761,15 @@ export default withClass;
 
 Usage:
 ```javascript
-import withClass from './withClass'
+// this is App.js
 // notice withClass instead of WithClass as withClass here is not a component but function
+import withClass from './withClass'
 return(
     //....no changes to the code
 )
 
 export default withClass(App, style);
 // here App will be WrappedComponent argument, and style is className in withClass function definition
-
 ```
 
 
