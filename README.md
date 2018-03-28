@@ -42,6 +42,8 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 33. Splice vs Splice : we can copy the object using `slice()` however we can remove element inside an array using `Splice()`. So often we use splice on an array to create new array and splice on the new array to removed the element. This avoids `mutating` the original array.
 34. Why do we need `key` property while rendering the DOM ? : If we don't mention the `key` while rendering list of components then react will always re-render the whole list and compare with the virtual dom. However if we use `key` property in the list then react will only render the components associated with the key and hence the computational work is less.
 35. Using `index` vs `id` in KEY: Typically index is always part of the list and any alteration to the data-set will result in change in `index` so it is not really unique with respect to React. So having / using `id` of an element helps the React much better. Example: `<BuildingHome key={eachHome.id} name={eachHome.name} price={eachHome.price}/>`is bette than using key like `<BuildingHome key={index} name={eachHome.name} price={eachHome.price}/>`.
+36. Make use of `PureComponent` only if the we have very minimal `props` or `state` change in the parent component so we can compare the props o state before rendering otherwise use `Component`.
+37. Higher Order Components can be used to wrap the JSX code instead of using / creating `<div>` elements in the return function. But from React 16.2 we can use `Fragments` instead of Higher Order Component which coverts to higher order components once compiled. Example: `return(<div>.....</div>)` can we written using higher order component as `return( <Aux>.....</Aux>)` and the same thing can be written using fragments as `return (<> ....</>)`
 
 
 ### Deep Dive
@@ -200,6 +202,32 @@ ReactDOM.render(<App/>,mountNode);
 * Once the DOM render is complete ComponentDidMount() is called
 * setState is called and state value has been changed
 * setState re-triggers the render method and render() method id called with state.name value
+
+4.1 LifeCycle Creation
+
+```javascript
+constructor(props) ---> ComponentWillMount ---> render() ---> Render Child Component ---> componentDidMount (can cause side effects, call API call but don't setState)
+```
+
+4.2 Lifecycle of Update
+
+```javascript
+componentWillReceiveProps(nextProps) --> shouldComponentUdate(newProps, nextstate) --> componentWillUpdate(newProps, newState) -->render() ---> Update all child components ---> componentDidUpdate()
+```
+we can make use of shouldComponentUdate method to compare if the newProps has been changed with respect to old props ( i.e newProps.person != props.person ) then only we can let the react know to execute the render() method. this helps in boosting the performance of the app. However we can implement this without this headache by usig pureComponent instead of Component in the class declaration and this will enforce the react to have the inbuilt check of shouldComponentUdate logic.
+
+```javascript
+import React, {Component} from `react`;
+class Person extends Component {
+  .....
+}
+
+// can we written using PureComponent as
+import React, {PureComponent} from `react`;
+class Person extends PureComponent {
+   ...
+}
+```
 
 #### 5. setState ( object style vs function style )
 -----------
@@ -532,8 +560,11 @@ Each component has it's own `state`, so if we ever want to calculate something o
 * Click Start Debugging (Debug View) [ you might have to reopen the chrome browser ].
 * Reference [link](https://code.visualstudio.com/docs/editor/debugging) for more details.
 
-#### 15. Styling
+#### 15. Styling ( CSS )
 ------
+
+15.1 Styling with Basic CSS
+
 Need to declare `.css` file and add css file name same as css class name and add this to the div event where we need to add. This will be recognized by the webpack and adds it to the final html in the DOM.
 ```javascript
 // file name of this css is People.css
@@ -551,6 +582,10 @@ import './People.css'
 </div>
 ```
 OR we can also add inline styling by simply adding `<button style={style}>click</button>`. where style is `const style = { font: 'inherit', color: red}`.
+
+15.2 Advance Styling
+
+We can use `radium` which needs to wrap the `<App/>` component and need to export the main and sub modules of radium before using it. This can be used to add `:hover` and `@media` queries to the CSS. Alternative way to do above is using `CSS Modules` which doesn't use `Radium`.
 
 #### 16. Handling Array / List of data in Component
 ----
@@ -646,8 +681,92 @@ handleNameChange = (event, personId) => {
   copyPersons[personIndex] = changedPerson;
   this.setState({ persons: copyPersons});
 }
-
  ```
+
+#### 17. Higher Order Component
+
+There are different ways we can leverage higher order components which can simply wraps the child or app components and pass the respective props and/or states depending on the higher order component definition.                                                                                                                   Why do we need higher order components ? return method in react needs return jsx wrapped with in one element. Most often we wrap with `<div> ... </div>` or return other component `<ChildComponent />` or use fragments like `<> ... </>` or `<React.Fragment> ... </React.Fragment>`. Alternative way to above all is writing simple higher order components which takes props and return to it's children as declared in 17.1 example.
+
+17.1 Custom Simple HOC
+In this higher order component we simply take the passed props and send it to it's children without any alteration. Please do notice it doesn't even require `React` to be imported as it's simple ES6 code.
+
+Definition:
+```javascript
+const simpleWrapper = (props) => props.children;
+export default simpleWrapper;
+```
+Usage:
+```javascript
+return (
+  <simpleWrapper>
+  .....
+  </simpleWrapper>
+)
+```
+
+17.2 Custom Advance HOC
+Simple HOC is doing nothing but acting as wrapper and hence avoided using extra `<div>` complexity in the jsx. However if we have return function with customized div such as `<div className={styleChildren}> ... </div>` then we might need a extracted higher order component which can be leveraged one or many div's of same scenario.
+
+Definition:
+```javascript
+import React from 'react';
+const withClass = (props) => {
+  return (
+    <div className={props.style}>
+      {props.children}
+    </div>
+  )
+}
+
+export default withClass;
+```
+
+Usage:
+```javascript
+import WithClass from './WithClass'
+//... code
+return (
+  <WithClass style={styleChildren}>
+    .... //rest of the code.
+  </WithClass>
+)
+```
+
+17.3 Configurable Advance HOC           
+Instead of leveraging just the `<div>` we can make higher order function (not a component ) more flexible which in turn returns wrapped component in customized way.
+
+Definition:
+```javascript
+import React from 'react'
+
+const withClass = (WrappedComponent, className) => {
+  //returning wrapped component
+  return (props) => (
+    <div className={className}>
+      <WrappedComponent {...props}/> //sending props using spread operator to WrappedComponent.
+    </div>
+  )
+}
+
+export default withClass;
+```
+
+Usage:
+```javascript
+import withClass from './withClass'
+// notice withClass instead of WithClass as withClass here is not a component but function
+return(
+    //....no changes to the code
+)
+
+export default withClass(App, style);
+// here App will be WrappedComponent argument, and style is className in withClass function definition
+
+```
+
+
+
+
 
 
 
@@ -656,3 +775,4 @@ Reference:
 2. [React Forms](https://www.sitepoint.com/work-with-forms-in-react/)
 3. [React How To](https://github.com/petehunt/react-howto)
 4. [Composition vs Inheritance](http://blog.brew.com.hk/react-101-composition-vs-inheritance/)
+5. [React Fragments](https://reactjs.org/blog/2017/11/28/react-v16.2.0-fragment-support.html#support-for-fragment-syntax)
