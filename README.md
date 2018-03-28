@@ -563,7 +563,7 @@ Each component has it's own `state`, so if we ever want to calculate something o
 #### 15. Styling ( CSS )
 ------
 
-15.1 Styling with Basic CSS
+##### 15.1 Styling with Basic CSS
 
 Need to declare `.css` file and add css file name same as css class name and add this to the div event where we need to add. This will be recognized by the webpack and adds it to the final html in the DOM.
 ```javascript
@@ -583,7 +583,7 @@ import './People.css'
 ```
 OR we can also add inline styling by simply adding `<button style={style}>click</button>`. where style is `const style = { font: 'inherit', color: red}`.
 
-15.2 Advance Styling
+##### 15.2 Advance Styling
 
 We can use `radium` which needs to wrap the `<App/>` component and need to export the main and sub modules of radium before using it. This can be used to add `:hover` and `@media` queries to the CSS. Alternative way to do above is using `CSS Modules` which doesn't use `Radium`.
 
@@ -603,7 +603,7 @@ this.state = {
 ```
 Now in `render(){ .... }` method we would have below code,
 
-16.1 Yucky way:
+##### 16.1 Yucky way:
 ```javascript
 render(){
   // ewww, going through each array index and sending as props.
@@ -622,7 +622,7 @@ render(){
 }
 ```
 
-16.2 Preferred way:
+##### 16.2 Preferred way:
 
 Hence we can write javascript inside render and render is called every time the state is changed we can make use of this to generate a list of components with each array element data as props using javascript map function.
 ```javascript
@@ -641,7 +641,7 @@ render(){
 ```
 Oh i added index as second element which i can use if needed but in our example we don't need so it can be simply `person => { return ...... }`.
 
-16.3 Change value in Array of objects.
+##### 16.3 Change value in Array of objects.
 
 persons in state has array of person ( i.e array of objects ). If we need to handle changing name of the person based on user input in text box then we need to capture `event` and `id` or `index` value of the element. Later update the `copied` persons object and merge to the actual person in state using `setState`. Lets take a look one by one,
 
@@ -684,6 +684,7 @@ handleNameChange = (event, personId) => {
  ```
 
 #### 17. Higher Order Component
+----------------
 
 There are different ways we can leverage higher order components which can simply wraps the child or app components and pass the respective props and/or states depending on the higher order component definition.                                                                                                                       
  Why do we need higher order components ? return method in react needs return jsx wrapped with in one element. Most often we wrap with `<div> ... </div>` or return other component `<ChildComponent />` or use fragments like `<> ... </>` or `<React.Fragment> ... </React.Fragment>`. Alternative way to above all is writing simple higher order components which takes props and return to it's children as declared in 17.1 example.
