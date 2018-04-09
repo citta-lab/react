@@ -9,7 +9,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 
 1. Don't use { and " " together when embedding javascript expressions in an attribute. Example: `const element = <img src={"user.avatarUrl"}></img>;` will throw exception instead do `const element = <img src={user.avatarUrl}></img>;`
 2. JSX is closer to javascript than HTML. i.e use camelcase property name in place of `class` it will be `className` etc. Example: `<h1 className="greeting">`
-3. All JSX should return one element. i.e `const elelemt = <div> WorkBook </div> <h1> Title </h1>;` will throw an exception instead do `const elelemt = <div> <div> WorkBook </div> <h1> Title </h1> </div>;`
+3. All JSX should return one element. i.e `const element = <div> WorkBook </div> <h1> Title </h1>;` will throw an exception instead do `const element = <div> <div> WorkBook </div> <h1> Title </h1> </div>;`
 4. XSS Prevention: React DOM escapes any values embedded in JSX before rendering.
 5. What is React Element ? An element describes what we want to see on the screen ( these are not DOM elements ). Example: `const element = <h1>Hello, Roger</h1>;` What is Component ? Component is made of these react elements.
 6. Components are isolated piece of code which accepts `pops` as inputs and returns react elements. So it's fair to say Components are made up of elements.
@@ -44,6 +44,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 35. Using `index` vs `id` in KEY: Typically index is always part of the list and any alteration to the data-set will result in change in `index` so it is not really unique with respect to React. So having / using `id` of an element helps the React much better. Example: `<BuildingHome key={eachHome.id} name={eachHome.name} price={eachHome.price}/>`is bette than using key like `<BuildingHome key={index} name={eachHome.name} price={eachHome.price}/>`.
 36. Make use of `PureComponent` only if the we have very minimal `props` or `state` change in the parent component so we can compare the props o state before rendering otherwise use `Component`.
 37. Higher Order Components can be used to wrap the JSX code instead of using / creating `<div>` elements in the return function. But from React 16.2 we can use `Fragments` instead of Higher Order Component which coverts to higher order components once compiled. Example: `return(<div>.....</div>)` can we written using higher order component as `return( <Aux>.....</Aux>)` and the same thing can be written using fragments as `return (<> ....</>)`
+38. Dynamic Image Import : we need to use `import logo from '../../images/example.png'` and use the logo as `img={logo}` instead of `<img src="../../images/example.png"`.
 
 
 ### Deep Dive
@@ -682,6 +683,111 @@ handleNameChange = (event, personId) => {
   this.setState({ persons: copyPersons});
 }
  ```
+
+##### 16.4 Extract Array from Object Key/Value:      
+Let say we have an object in state with key and value as `{"Eddy", 2}` where key will be `Eddy` and value will be `2`. Now we need to build some component called `FoodOrder` twice as the value was `2`. Then we need to first convert an list of objects into an array, extract key `Eddy` and retrieve it's value `2` and build array of empty or undefined or some string array to represent `2Times` and call `FoodOrder` component. Simplicity we will assume this is set in state,
+```javascript
+state = {
+  allocation: {
+    "Eddy": 2,
+    "Danny": 1,
+    "John": 3
+  }
+}
+```
+Now if we receive this as props in functional component, then we would do above mentioned steps as follows,
+```javascript
+const buildAllocationDiv = Object.keys(props.allocation)
+      /* now we have array of keys, so mapping */
+      .map(allocationKey => {
+        /* now we have another array build with undefined values as per value length */
+        return [...Array(props.allocation[allocationKey])]
+        /* looping over undefined values inside array to build components */
+        .map((_,i)=>{
+          return <FoodOrder key={allocationKey+i} food={allocationKey}/>
+          /* this will build FoodOrder component for Eddy twice */
+        })
+      })
+```
+This will be extracted in return method as
+```javascript
+return(
+  {buildAllocationDiv}
+  /* ------ which is replacement for building -------
+    <FoodOrder key="123" food="Eddy"/>
+    <FoodOrder key="124" food="Eddy"/>
+    <FoodOrder key="125" food="Danny"/>
+    <FoodOrder key="126" food="John"/>
+    ....
+  */
+)
+```
+
+##### 16.4 Calculate SUM from Object Key/Value:  
+
+Idea of this example is to convert key/value pair object into array and then extract the values of each key to calculate sum of all the values.
+```javascript
+state = {
+  allocation: {
+    "Eddy": 2,
+    "Danny": 1,
+    "John": 3
+  },
+  moreThanTen: false,
+}
+```
+Now that we have state with object `allocation`. I have also added one more property `moreThanTen` in state to determine if the calculated value is more than `10` then setState to change the value of `moreThanTen` to true.
+```javascript
+        /*
+            1. copy existing state
+            2. use Object.keys to create array of keys. i.e ['Eddy','Danny','John']
+            3. use map to iterate over the array of keys and extract respective values. i.e ['2','1','3']
+            4. use reduce to sum these values. 0 is initial value, sum will be total.
+            5. setState to true if sum > 10
+        */
+const sumCalculator = () => {
+  const allocation = {...this.state.allocation};
+  const sum = Object.keys(allocation)
+              .map(item => {
+                return allocation[item];
+              })
+              .reduce((sum, element) => {
+                return sum + element;
+              }, 0);
+
+  this.setState({
+    moreThanTen: sum > 10,
+  })
+}
+```
+
+##### 16.5 Return list of Data from Object Key/Value:
+Let's assume instead of manipulating the initial state we might just want to display the `key` and `value` inside return. So we will take same value from state,
+```javascript
+state = {
+  allocation: {
+    "Eddy": 2,
+    "Danny": 1,
+    "John": 3
+  }
+}
+```
+We can write functional component as    
+```javascript
+const display = (props) => {
+
+  // should display as i.e "Eddy has value 2"
+  const allocationList = Object.keys(props.allocation).map(item => ({
+    return <li>{item} has value {props.allocation[item]} </li>
+  }))
+
+  return(
+    <React.Fragment>
+      <ul>{allocationList}</ul>
+    </React.Fragment>
+  )
+}
+```
 
 #### 17. Higher Order Component
 ----------------
