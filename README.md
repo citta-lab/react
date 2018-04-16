@@ -970,7 +970,7 @@ axios.interceptors.response.use(response => {
 ```
 If we are interested in checking if the `INTERNET` connection is working then replace `response` in `axios.interceptors.response` with `request`.
 
-18.1.5: REQUEST CONFIG:            
+18.1.5: request config:            
 Instead of having rest url in all request we can declare in `index.js` using `axios.defaults`. By doing so
 
 ```javascript
