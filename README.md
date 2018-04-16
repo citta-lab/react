@@ -935,7 +935,7 @@ componentDidUpdate(){
 
 ```
 
-18.1.3: POST DATA
+18.1.3: POST DATA     
 ```javascript
 // this is called by onClick={this.handlePostData}
 handlePostData = () => {
@@ -955,7 +955,7 @@ handlePostData = () => {
 
 ```
 
-18.1.4: ERROR HANDLING:
+18.1.4: ERROR HANDLING:                  
 As it was mentioned in the above steps we can always handle error locally using `catch(e)` but we can also handle globally (i.e at app load ) and still let the local error handling work.
 
 ```javascript
