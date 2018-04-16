@@ -899,7 +899,7 @@ componentDidMount(){
 }
 ```
 
-18.1.2: GET A DATA:
+18.1.2: GET A DATA:            
 In some cases we need to update the already rendered element based on probably user click or selection then we can use `componentDidUpdate`, however make sure to check the `NETWORK` tab for infinite calls if we are setting state inside the lifecyclehook.
 
 ```javascript
@@ -970,7 +970,7 @@ axios.interceptors.response.use(response => {
 ```
 If we are interested in checking if the `INTERNET` connection is working then replace `response` in `axios.interceptors.response` with `request`.
 
-18.1.5: REQUEST CONFIG:
+18.1.5: REQUEST CONFIG:            
 Instead of having rest url in all request we can declare in `index.js` using `axios.defaults`. By doing so
 
 ```javascript
