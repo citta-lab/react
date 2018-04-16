@@ -1,4 +1,4 @@
-React [ juggling pebbles ]
+preciselyReact [ juggling pebbles ]
 --------------------------
 
 React is javascript library not a framework like AngularJS, Angular and most of the React coding can be done by just knowing javascript and JSX. People claim react reinvented the wheel ( facebook seems to have used php with in html ) by letting javascript and html work together instead of being treated independent entity web applications. JSX is fancy way of saying html and javascript together, this requires a transpiler named 'Babel' to convert this JSX to javascript.
@@ -878,6 +878,122 @@ return(
 export default withClass(App, style);
 // here App will be WrappedComponent argument, and style is className in withClass function definition
 ```
+#### 18. Server Access:
+------------------
+Hence react is all about javascript we have two options to access/purge data in via React. [1]. XMLHttpRequest: object used to construct own ajax call. [2]. Axios ( javascript package library for accessing server side ).
+
+##### 18.1 Using Axios:
+In React App we should make call to the server using `lifecycle hooks`, precisely in ComponentDidMount as it causes side effects and make the re-rendering. However we should't be using this `ComponentDidMount` to set state ( expect when we retrieve data from the server ).
+
+18.1.1: GET ALL DATA     
+```javascript
+componentDidMount(){
+  axios.get("http://xxxx.com/data/")
+    .then(resposne => {
+      this.setState({
+        posts: response.data,
+      })
+    }).catch(e){
+      // handle error
+    }
+}
+```
+
+18.1.2: GET A DATA:
+In some cases we need to update the already rendered element based on probably user click or selection then we can use `componentDidUpdate`, however make sure to check the `NETWORK` tab for infinite calls if we are setting state inside the lifecyclehook.
+
+```javascript
+
+state={
+  filteredPerson: null
+}
+
+// only be called if the `props` value passed to component changes. i.e <ChildComponent id={this.state.personId}.
+componentDidUpdate(){
+  if(this.props.id){
+    if(!this.state.filteredPerson || (this.state.filteredPerson && (this.state.filteredPerson.id !== this.props.id))){
+      axios.get("https://jsonplaceholder.typicode.com/posts/"+this.props.id)
+      .then(response => {
+        this.setState({
+          filteredPerson: response.data
+        })
+      }).catch(e){
+        // handle error
+      }
+    }
+  }
+}
+
+/*
+1. Assume id is sent as props whenever user select something from the parent. i.e <ChildComponent id={this.state.personId}
+2. We need to call the REST point based on the id, store that data in state to render.
+3. so we check `if(this.props.id)` if we have id. This evaluation result either TRUE or FALSE.
+4. In this step we need to make sure we only call web service once if we have no value in the state ( first time ) and whenever there is change in user selection.
+5. concatenate the selected id from the props to the request.
+6. do setState to set state. This will trigger re-render of the UI.
+*/
+
+```
+
+18.1.3: POST DATA
+```javascript
+// this is called by onClick={this.handlePostData}
+handlePostData = () => {
+
+  // Assuming we used onChange method to store value from user filed to state upon changing, hence we are retrieving from state.
+  const data: {
+    id: this.state.personId,
+    name: this.state.personName
+  }
+
+  axios.post("http://xxxx.com/post/", data)
+  .then(response => {
+    //success message
+    console.log(JSON.stringyfy(response.data))
+  })
+}
+
+```
+
+18.1.4: ERROR HANDLING:
+As it was mentioned in the above steps we can always handle error locally using `catch(e)` but we can also handle globally (i.e at app load ) and still let the local error handling work.
+
+```javascript
+//in index.js
+axios.interceptors.response.use(response => {
+  // we need to explicitly return response otherwise it block it
+  return response;
+}, error => {
+  console.log(error); //handling global error.
+  return Promise.reject(error);
+})
+```
+If we are interested in checking if the `INTERNET` connection is working then replace `response` in `axios.interceptors.response` with `request`.
+
+18.1.5: REQUEST CONFIG:
+Instead of having rest url in all request we can declare in `index.js` using `axios.defaults`. By doing so
+
+```javascript
+axios.defaults.baseURL = "http://xxxx.com";
+// we can also use for setting AUTH TOKEN, Content-type etc
+```
+
+Before
+```javascript
+axios.get("http://xxxxx.com/get")
+.then(response => {
+  //....
+})
+```
+
+After
+```javascript
+axios.get("/get")
+.then(response => {
+  //....
+})
+```
+
 
 
 
