@@ -885,7 +885,7 @@ Hence react is all about javascript we have two options to access/purge data in 
 ##### 18.1 Using Axios:
 In React App we should make call to the server using `lifecycle hooks`, precisely in ComponentDidMount as it causes side effects and make the re-rendering. However we should't be using this `ComponentDidMount` to set state ( expect when we retrieve data from the server ).
 
-18.1.1: GET ALL DATA     
+18.1.1: get all data:          
 ```javascript
 componentDidMount(){
   axios.get("http://xxxx.com/data/")
@@ -899,7 +899,7 @@ componentDidMount(){
 }
 ```
 
-18.1.2: GET A DATA:            
+18.1.2: get a data:            
 In some cases we need to update the already rendered element based on probably user click or selection then we can use `componentDidUpdate`, however make sure to check the `NETWORK` tab for infinite calls if we are setting state inside the lifecyclehook.
 
 ```javascript
@@ -935,7 +935,7 @@ componentDidUpdate(){
 
 ```
 
-18.1.3: POST DATA     
+18.1.3: post data:         
 ```javascript
 // this is called by onClick={this.handlePostData}
 handlePostData = () => {
@@ -955,7 +955,7 @@ handlePostData = () => {
 
 ```
 
-18.1.4: ERROR HANDLING:                  
+18.1.4: error handling:                  
 As it was mentioned in the above steps we can always handle error locally using `catch(e)` but we can also handle globally (i.e at app load ) and still let the local error handling work.
 
 ```javascript
