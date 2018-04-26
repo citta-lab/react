@@ -795,6 +795,22 @@ const display = (props) => {
 There are different ways we can leverage higher order components which can simply wraps the child or app components and pass the respective props and/or states depending on the higher order component definition.                                                                                                                       
  Why do we need higher order components ? return method in react needs return jsx wrapped with in one element. Most often we wrap with `<div> ... </div>` or return other component `<ChildComponent />` or use fragments like `<> ... </>` or `<React.Fragment> ... </React.Fragment>`. Alternative way to above all is writing simple higher order components which takes props and return to it's children as declared in 17.1 example.
 
+ 17.1 withFormat:
+
+ Most often we don't want to wrap the component with higher order component like `<Aux> <ChildComponent/> <Aux>` and/or maybe we don't want the user to worry about wrapping with higher order component which passes the required props like `<Manager> <Content/> </Manager>` then we write a higher order component which takes `WrapperComponent` as props and return the component. This can be used while exporting the other component with HOC. example: `export default withAuxComponent(<ChildComponent/>)`.
+
+ ```javascript
+const withAuxHandler = (WrapperComponent) => {
+  return (props) => {
+    return (
+      <React.Fragment>
+        <WrappedComponent {...props} />
+      </React.Fragment>
+    )
+  }
+}
+ ```
+
 ##### 17.1 Custom Simple HOC          
 In this higher order component we simply take the passed props and send it to it's children without any alteration. Please do notice it doesn't even require `React` to be imported as it's simple ES6 code.
 
@@ -878,6 +894,73 @@ return(
 export default withClass(App, style);
 // here App will be WrappedComponent argument, and style is className in withClass function definition
 ```
+
+##### 17.4 Configurable Advance HOC with class
+This scenario is more of an example than separate type, instead of returning HOC function with just jsx we can return anonymous react class which provides extra life cycle hooks to be
+used in HOC for data validation or extraction. One such example is to declare global error handling from `axios`.
+  Axios has interceptors which can be leveraged to use it globally, instead of handling error within the component we can make use of `axios.interceptors` to listen ( acts like listeners )
+to listen for `request` or `response` and handle the message.
+
+Definition
+```javascript
+// this is withErrorHandler.js
+import React, { Component } from 'react';
+
+/* function takes two arguments */
+const withErrorHandler =(WrappedComponent, axios) => {
+  {/*anonymous class as it doesn't have name*/}
+  return class extends Component {
+    render(){
+
+      state={
+        error: null
+      }
+
+      componentDidMount(){
+
+        /* resetting error if we receive request is successful */
+        axiso.interceptors.request.use(req=> {
+          this.setState({error: null});
+          /* this is important to let the req flow through otherwise req will not
+             be received from other component */
+          return req;
+        })
+
+        /* resetting error if we receive request is successful */
+        axios.interceptors.response.use(res => res, error => {
+          /* res => res is to letting the request flow through */
+          this.setState({error: error})
+        })
+      }
+
+      return(
+        <React.Fragment>
+          <ModalManager show={this.state.error ? this.state.error : null}>
+            {this.state.error.message}
+            /* .message was appended by axios to error object if found */
+          </ModalManager>
+          <WrappedComponent {...this.props} />
+        </React.Fragment>
+      )
+    }
+  }
+}
+
+export default withErrorHandler;
+```
+
+Usage:
+```javascript
+//this is OrderHandler.js
+/**
+  we import axios here, and make call to API for fetching the data.
+  return function has <ModalManager> ... </ModalManager>, hence we have wrapped OrderHandler with withErrorHandler
+  it will throw error if ModalManager is triggered with error.
+*/
+
+export default withErrorHandler(OrderHandler, axios);
+```
+
 #### 18. Server Access:
 ------------------
 Hence react is all about javascript we have two options to access/purge data in via React. [1]. XMLHttpRequest: object used to construct own ajax call. [2]. Axios ( javascript package library for accessing server side ).
