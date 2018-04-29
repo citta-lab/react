@@ -46,6 +46,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 37. Higher Order Components can be used to wrap the JSX code instead of using / creating `<div>` elements in the return function. But from React 16.2 we can use `Fragments` instead of Higher Order Component which coverts to higher order components once compiled. Example: `return(<div>.....</div>)` can we written using higher order component as `return( <Aux>.....</Aux>)` and the same thing can be written using fragments as `return (<> ....</>)`
 38. Dynamic Image Import : we need to use `import logo from '../../images/example.png'` and use the logo as `img={logo}` instead of `<img src="../../images/example.png"`.
 39. Remove trailing comma from the object. example: `Example = { data: value, region: "state", job: "sales" }` instead of `Example = { data: value, region: "state", job: "sales", }`.
+40. Absolute path means that it's always appended right after your domain. Therefore, both syntaxes (with and without leading slash) lead to `example.com/some-path`. Relative paths are appended to the already existing path not add path right after the domain name, i.e `example.com/some-path/relative-path`.
 
 
 ### Deep Dive
@@ -498,7 +499,7 @@ Now if we click on New Person the browser url will look like `http://localhost:3
 > pathname defined using Link are always absolute path by default. i.e it will replace the current path by declared path. If we need to use the relative path ( append declared path to existing url path ) then we need to make use of router related match props like `pathname: this.props.match.url + '/new-person'`.
 
 More information about router path in below section,
-       
+
 #### 9.3 Route-Props ( passed by Route )
 `<Route />` passed down extra props related to routing which we can leverage further, we can add `console.log(this.props)` in any of the components (the one defined using Route ) `ComponentDidMount` lifecycle hook to verify. This gives more information about routing details using `history`, `location` and `match` object details. Keep an eye on `goBack` and `goForward` attributes from `history` which we can leverage for navigating using browser back and forward button :).
 > However by default these routing props are not passed down to child component of component defined in in the <Route>.
