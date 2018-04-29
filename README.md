@@ -485,11 +485,11 @@ From the above Route definition if the user clicks on any of the navigation `hre
 <header>
   <nav>
     <li><Link to="/">Home</Link></li>
-    <li><a to={{
+    <li><Link to={{
       pathname: '/new-person',
       hash: '#submit',
       search: '?search=true'
-    }}>New Person</a></li>
+    }}>New Person</Link></li>
     <li><Link="contact">Contact</Link></li>
   </nav>
 </header>
@@ -498,11 +498,39 @@ Now if we click on New Person the browser url will look like `http://localhost:3
 
 > pathname defined using Link are always absolute path by default. i.e it will replace the current path by declared path. If we need to use the relative path ( append declared path to existing url path ) then we need to make use of router related match props like `pathname: this.props.match.url + '/new-person'`.
 
-More information about router path in below section,
+More information about router path in below section. If we inspect the navigation element from `anchor` tag and from `Link`
+component we see the information as below,
+```html
+<li><Link to="/">Home</Link></li>
+<!-- INSPECTED PROPERTY ( added by Link )-->
+<a aria-current="true" href="/">Home</a>
+```
+If we need to add custom style then we need to import `NavLink` instead of `Link` which comes with more features than `Link`. So if we replace `Link` from the above we can add custom class name for styling,
+```javascript
+import { NavLink } from 'react-router-dom';
+<header>
+  <nav>
+    <li><NavLink exact
+      to="/"
+      activeClassName="my-active"  //this will overwrite default active class added by NavLink.
+      activeStyle={{  // defining css property.
+        color: '#fa923f',
+        textDecoration: 'underline'
+      }}
+    >Home</NavLink></li>
+    <li><NavLink to={{
+      pathname: '/new-person',
+      hash: '#submit',
+      search: '?search=true'
+    }}>New Person</NavLink></li>
+    <li><NavLink="contact">Contact</NavLink></li>
+  </nav>
+</header>
+```
 
 #### 9.3 Route-Props ( passed by Route )
 `<Route />` passed down extra props related to routing which we can leverage further, we can add `console.log(this.props)` in any of the components (the one defined using Route ) `ComponentDidMount` lifecycle hook to verify. This gives more information about routing details using `history`, `location` and `match` object details. Keep an eye on `goBack` and `goForward` attributes from `history` which we can leverage for navigating using browser back and forward button :).
-> However by default these routing props are not passed down to child component of component defined in in the <Route>.
+> However by default these routing props are not passed down to child component of component defined in in the Route.
 
 #### 9.4 withRouter ( pass props down )
 If we need to use the routing related props in child component of the routed path component then we can use the higher order component `withRouter` from the `react-router-dom`.
@@ -514,6 +542,32 @@ export default withRouter(childComponentOfNewPerson);
 // Here childComponentOfNewPerson is used in NewPerson component.
 ```
 There is also an another way where we just manually pass down the props we are interested to it's respective child component using spread operator like `<childComponentOfNewPerson location={...this.props.location} />` or all the props of NewPerson like `<childComponentOfNewPerson {...this.props} />`.
+
+#### 9.5 Query Param ( using Link/NavLink)
+As we know router props comes with additional prop attributes which we can leverage one such thing is `this.props.match.params`. If we decide to pass some person id to `Personal` component to display full details then we need to define the query param in the Route,
+```javascript
+<Route path="/:id" component ={Personal} />
+/* query param will be id, added to Personal component */
+```
+
+Now we make use of Link component to pass the id to Personal component from wherever we are calling the Personal component.
+```javascript
+<Link to={"/" +person.id} key={person.id}> <Personal .../></Link> //passing id value to the url
+/* before it was <Personal key={person.id} name={person.name} job={person.job}/>*/
+```
+
+We make use of `ComponentDidMount` in Personal component to retrieve the value of router props to validate and build the appropriate jsx.
+```javascript
+componentDidMount () {
+  if ( this.props.match.params.id ) {
+    axios.get('/posts' +this.props.match.params.id)
+    .then(res => {
+      this.setState({ personalLoadData : true})
+    })
+  }
+}
+```
+
 
 ##### Notes
 * More details about [history library](https://github.com/reacttraining/history) used by <BrowserRouter/>.
