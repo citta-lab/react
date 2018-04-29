@@ -466,9 +466,10 @@ import Route from 'react-router-dom'; // Need to be imported.
 ```
 Notice here, whenever the matching path `/` is matched Route will load the page. Example: In browser url if the path is `http://localhost:3000/` it will load the page with `Hello, Welcome Home` however it will load the same page even if the path is `/new-person`. So it acts as `contains` rather than EXACT, if we need to ONLY match the Route to match defined path `/` then we need to use the boolean `exact` in the Route.
 ```javascript
-<Route path="/" exact render={() => <h1> Hello, Welcome Home </h1>} /> // example test case just to render simple things
-//Similarly,
-<Route path="/" exact component={ComponentName} /> //default case we would use in real projects
+// example test case just to render simple things
+<Route path="/" exact render={() => <h1> Hello, Welcome Home </h1>} />
+//Similarly, default case we would use in real projects
+<Route path="/" exact component={ComponentName} />
 ```
 So we can define different paths as mentioned below for our example scenario,
 ```javascript
@@ -492,8 +493,26 @@ From the above Route definition if the user clicks on any of the navigation `hre
   </nav>
 </header>
 ```
-Now if we click on New Person the browser url will look like `http://localhost:3000/new-person?search=true#submit` and the re-renders the page instead of 'RELOADING'.
+Now if we click on New Person the browser url will look like `http://localhost:3000/new-person?search=true#submit` and the app re-renders the page instead of 'RELOADING'.
 
+> pathname defined using Link are always absolute path by default. i.e it will replace the current path by declared path. If we need to use the relative path ( append declared path to existing url path ) then we need to make use of router related match props like `pathname: this.props.match.url + '/new-person'`.
+
+More information about router path in below section,
+       
+#### 9.3 Route-Props ( passed by Route )
+`<Route />` passed down extra props related to routing which we can leverage further, we can add `console.log(this.props)` in any of the components (the one defined using Route ) `ComponentDidMount` lifecycle hook to verify. This gives more information about routing details using `history`, `location` and `match` object details. Keep an eye on `goBack` and `goForward` attributes from `history` which we can leverage for navigating using browser back and forward button :).
+> However by default these routing props are not passed down to child component of component defined in in the <Route>.
+
+#### 9.4 withRouter ( pass props down )
+If we need to use the routing related props in child component of the routed path component then we can use the higher order component `withRouter` from the `react-router-dom`.
+```javascript
+// file: childComponentOfNewPerson.js
+import { withRouter } from 'react-router-dom';
+...
+export default withRouter(childComponentOfNewPerson);
+// Here childComponentOfNewPerson is used in NewPerson component.
+```
+There is also an another way where we just manually pass down the props we are interested to it's respective child component using spread operator like `<childComponentOfNewPerson location={...this.props.location} />` or all the props of NewPerson like `<childComponentOfNewPerson {...this.props} />`.
 
 ##### Notes
 * More details about [history library](https://github.com/reacttraining/history) used by <BrowserRouter/>.
