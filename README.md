@@ -45,6 +45,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 36. Make use of `PureComponent` only if the we have very minimal `props` or `state` change in the parent component so we can compare the props o state before rendering otherwise use `Component`.
 37. Higher Order Components can be used to wrap the JSX code instead of using / creating `<div>` elements in the return function. But from React 16.2 we can use `Fragments` instead of Higher Order Component which coverts to higher order components once compiled. Example: `return(<div>.....</div>)` can we written using higher order component as `return( <Aux>.....</Aux>)` and the same thing can be written using fragments as `return (<> ....</>)`
 38. Dynamic Image Import : we need to use `import logo from '../../images/example.png'` and use the logo as `img={logo}` instead of `<img src="../../images/example.png"`.
+39. Remove trailing comma from the object. example: `Example = { data: value, region: "state", job: "sales" }` instead of `Example = { data: value, region: "state", job: "sales", }`.
 
 
 ### Deep Dive
@@ -433,13 +434,68 @@ ReactDOM.render(
 * install the module `npm install --save react-router-dom`.
 * Implement <BrowserRouter/>, which will listen to url changes and loads the appropriate page. Add details in index.js page.
 ```javascript
-import { BrowserRouter } from 'react-router-dom' // need to import the BroswerRouter
+import { BrowserRouter } from 'react-router-dom' // need to import the BrowserRouter
 
 ReactDOM.render(
-  <BrowserRouter><App/><BrowserRouter/>, // this will implement BrowserRouter to entire app
+  <BrowserRouter>
+    <App/>
+  <BrowserRouter/>, // this will implement BrowserRouter to entire app
   document.getElementById('root')
 )
 ```
+Once we have wrapped our root component with the `BrowserRouter` we are all set to explore routing, below are the scenario we will face,
+
+#### 9.0 Preparation
+Prep Example:  
+Image we have defined navigation in our `App.js` return function as follows,
+```html
+<header>
+  <nav>
+    <li><a href="/">Home</a></li>
+    <li><a href="new-person">New Person</a></li>
+    <li><a href="contact">Contact</a></li>
+  </nav>
+</header>
+```
+
+#### 9.1 Path
+Now we need to define routes to load the page when the user clicks on these `href`, so we implement route from the library. While using `<Route />` from the react-router-dom we need to pass in the path which will direct the page to be loaded. `<Route />` is self closing component, below is the example of using home page routing.
+```javascript
+import Route from 'react-router-dom'; // Need to be imported.
+<Route path="/" render={() => <h1> Hello, Welcome Home </h1>} />
+```
+Notice here, whenever the matching path `/` is matched Route will load the page. Example: In browser url if the path is `http://localhost:3000/` it will load the page with `Hello, Welcome Home` however it will load the same page even if the path is `/new-person`. So it acts as `contains` rather than EXACT, if we need to ONLY match the Route to match defined path `/` then we need to use the boolean `exact` in the Route.
+```javascript
+<Route path="/" exact render={() => <h1> Hello, Welcome Home </h1>} /> // example test case just to render simple things
+//Similarly,
+<Route path="/" exact component={ComponentName} /> //default case we would use in real projects
+```
+So we can define different paths as mentioned below for our example scenario,
+```javascript
+<Route path="/" exact component={HomeComponent} />
+<Route path="/new-person" exact component={NewPerson} />
+<Route path="/contact" component ={Contact} />
+```
+
+#### 9.2 Link ( aka Prevent Reload )
+From the above Route definition if the user clicks on any of the navigation `href` links defined in `9.0 Preparation` step it reloads the whole app which loses the state. Instead we should only re-render the page, not reload the entire React app. So `Link` component from `react-router-dom` comes to rescue. It acts as an anchor tag `href` with more feature, so our anchor tags will become,
+```javascript
+<header>
+  <nav>
+    <li><Link to="/">Home</Link></li>
+    <li><a to={{
+      pathname: '/new-person',
+      hash: '#submit',
+      search: '?search=true'
+    }}>New Person</a></li>
+    <li><Link="contact">Contact</Link></li>
+  </nav>
+</header>
+```
+Now if we click on New Person the browser url will look like `http://localhost:3000/new-person?search=true#submit` and the re-renders the page instead of 'RELOADING'.
+
+
+##### Notes
 * More details about [history library](https://github.com/reacttraining/history) used by <BrowserRouter/>.
 * <Link/> component in react browser talks to <BrowserRouter> and changes the url according to user actions.
 * <Link/> needs to be imported before using by `import { Link } from 'react-router-dom'` and can be used like any other component <Link to='/create'>Add</Link>.`to` does the same job as `href` in anchor tag <a/>.
@@ -919,7 +975,7 @@ const withErrorHandler =(WrappedComponent, axios) => {
       componentDidMount(){
 
         /* resetting error if we receive request is successful */
-        axiso.interceptors.request.use(req=> {
+        this.requestInterceptors = axiso.interceptors.request.use(req=> {
           this.setState({error: null});
           /* this is important to let the req flow through otherwise req will not
              be received from other component */
@@ -927,10 +983,16 @@ const withErrorHandler =(WrappedComponent, axios) => {
         })
 
         /* resetting error if we receive request is successful */
-        axios.interceptors.response.use(res => res, error => {
+        this.responseInterceptors = axios.interceptors.response.use(res => res, error => {
           /* res => res is to letting the request flow through */
           this.setState({error: error})
         })
+      }
+
+      /* need to remove axios once the component is unmounted to avoid memory leak */
+      componentWillUnmount(){
+        axios.interceptors.request.eject(this.requestInterceptors);
+        axios.interceptors.response.eject(this.responseInterceptors);
       }
 
       return(
