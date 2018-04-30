@@ -47,6 +47,8 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 38. Dynamic Image Import : we need to use `import logo from '../../images/example.png'` and use the logo as `img={logo}` instead of `<img src="../../images/example.png"`.
 39. Remove trailing comma from the object. example: `Example = { data: value, region: "state", job: "sales" }` instead of `Example = { data: value, region: "state", job: "sales", }`.
 40. Absolute path means that it's always appended right after your domain. Therefore, both syntaxes (with and without leading slash) lead to `example.com/some-path`. Relative paths are appended to the already existing path not add path right after the domain name, i.e `example.com/some-path/relative-path`.
+41. Order is very important while using `<Route>` and `<Link>` from 'react-router-dom'. If we wrap all the `<Route>` defined with `<Switch>..</Switch>` then it will only let load first matched pathname.
+42. `<Redirect from="" to="">` component can be used to load the page once user action is completed on different page, However if we don't use <Redirect/> with in `<Switch>..</Switch>` we will not have access to `from` property. In this case we can make use of `state` to conditionally check or use `this.props.history.push("/page")` or `this.props.history.replace("/page")` to achieve the same.
 
 
 ### Deep Dive
@@ -428,6 +430,8 @@ ReactDOM.render(
 
 #### 9. Router ( Single Page Application )
 ------------------
+> Page are stalked on top of each other when we navigate between different pages, React router make use of this using it's `history` prop to allow us to achieve the same behavior as the native browser.
+
 [Single page apps in depth](http://singlepageappbook.com/goal.html) talks about SPA in details and React doesn't have this in built. So react training team has built a module which helps us achieve SPA in react apps. `React-Router` has been built for DOM and Native react application. Which is nothing but `<BrowserRouter/>` component implementation which leverages `history` library built by React training.         
 
 >The three main building blocks of react router are `<BrowserRouter>` component which will wrap the entire application for routing, `<Link>` component to take user action and load appropriate url and finally `<Route>` component to load appropriate page based on user action done through <Link> component.
@@ -446,7 +450,7 @@ ReactDOM.render(
 ```
 Once we have wrapped our root component with the `BrowserRouter` we are all set to explore routing, below are the scenario we will face,
 
-#### 9.0 Preparation
+##### 9.0 Preparation
 Prep Example:  
 Image we have defined navigation in our `App.js` return function as follows,
 ```html
@@ -459,7 +463,7 @@ Image we have defined navigation in our `App.js` return function as follows,
 </header>
 ```
 
-#### 9.1 Path
+##### 9.1 Path
 Now we need to define routes to load the page when the user clicks on these `href`, so we implement route from the library. While using `<Route />` from the react-router-dom we need to pass in the path which will direct the page to be loaded. `<Route />` is self closing component, below is the example of using home page routing.
 ```javascript
 import Route from 'react-router-dom'; // Need to be imported.
@@ -479,7 +483,7 @@ So we can define different paths as mentioned below for our example scenario,
 <Route path="/contact" component ={Contact} />
 ```
 
-#### 9.2 Link ( aka Prevent Reload )
+##### 9.2 Link ( aka Prevent Reload )
 From the above Route definition if the user clicks on any of the navigation `href` links defined in `9.0 Preparation` step it reloads the whole app which loses the state. Instead we should only re-render the page, not reload the entire React app. So `Link` component from `react-router-dom` comes to rescue. It acts as an anchor tag `href` with more feature, so our anchor tags will become,
 ```javascript
 <header>
@@ -528,11 +532,11 @@ import { NavLink } from 'react-router-dom';
 </header>
 ```
 
-#### 9.3 Route-Props ( passed by Route )
+##### 9.3 Route-Props ( passed by Route )
 `<Route />` passed down extra props related to routing which we can leverage further, we can add `console.log(this.props)` in any of the components (the one defined using Route ) `ComponentDidMount` lifecycle hook to verify. This gives more information about routing details using `history`, `location` and `match` object details. Keep an eye on `goBack` and `goForward` attributes from `history` which we can leverage for navigating using browser back and forward button :).
 > However by default these routing props are not passed down to child component of component defined in in the Route.
 
-#### 9.4 withRouter ( pass props down )
+##### 9.4 withRouter ( pass props down )
 If we need to use the routing related props in child component of the routed path component then we can use the higher order component `withRouter` from the `react-router-dom`.
 ```javascript
 // file: childComponentOfNewPerson.js
@@ -543,7 +547,10 @@ export default withRouter(childComponentOfNewPerson);
 ```
 There is also an another way where we just manually pass down the props we are interested to it's respective child component using spread operator like `<childComponentOfNewPerson location={...this.props.location} />` or all the props of NewPerson like `<childComponentOfNewPerson {...this.props} />`.
 
-#### 9.5 Query Param ( using Link/NavLink)
+##### 9.5 Query Param ( using Link/NavLink)
+
+###### Method 1:  
+
 As we know router props comes with additional prop attributes which we can leverage one such thing is `this.props.match.params`. If we decide to pass some person id to `Personal` component to display full details then we need to define the query param in the Route,
 ```javascript
 <Route path="/:id" component ={Personal} />
@@ -560,6 +567,7 @@ We make use of `ComponentDidMount` in Personal component to retrieve the value o
 ```javascript
 componentDidMount () {
   if ( this.props.match.params.id ) {
+    //here we are using the query id to call restApi for the data.
     axios.get('/posts' +this.props.match.params.id)
     .then(res => {
       this.setState({ personalLoadData : true})
@@ -567,7 +575,30 @@ componentDidMount () {
   }
 }
 ```
+Wrapping all or needed `<Route/>` using `<Switch>` we can prevent router to load more than one matching pages based on pathname match and not use `exact`. So our <Route> might look as below,
+```javascript
+<Route path="/" exact component={HomeComponent} />
+<Switch>
+  //only loads one of the below at once, so the ORDER is important.
+  <Route path="/new-person" exact component={NewPerson} />
+  <Route path="/contact" component ={Contact} />
+</Switch>
+```
 
+###### Method 2:
+
+Instead of using `<Link/>` we can make use of router props to extract and load the appropriate page on click. We can add logic to extract the clicked id and push the path we want to route to, so example from Method 1 becomes,
+```javascript
+//<Link to={"/" +person.id} key={person.id}> <Personal .../></Link> //passing id value to the url
+<Personal key={person.id} name={person.name} job={person.job} onClick={this.handleRoutePath(person.id)}/>*/
+
+/*handler method, this replaces the need of having <Link to={"/" +person.id} key={person.id}> .. */
+handleRoutePath = (id) => {
+  this.props.history.push({pathname: '/' +id});
+  //or this.props.history.push('/'+id);
+}
+```
+Further we can also make use of `this.props.match.url` to dynamically load the path in Route. So we can re-write `<Route path="/:id" component ={Personal} />` to `<Route path={this.props.match.url + "/:id"} component ={Personal} />`.
 
 ##### Notes
 * More details about [history library](https://github.com/reacttraining/history) used by <BrowserRouter/>.
