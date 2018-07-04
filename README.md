@@ -50,6 +50,79 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 41. Order is very important while using `<Route>` and `<Link>` from 'react-router-dom'. If we wrap all the `<Route>` defined with `<Switch>..</Switch>` then it will only let load first matched pathname.
 42. `<Redirect from="" to="">` component can be used to load the page once user action is completed on different page, However if we don't use <Redirect/> with in `<Switch>..</Switch>` we will not have access to `from` property. In this case we can make use of `state` to conditionally check or use `this.props.history.push("/page")` or `this.props.history.replace("/page")` to achieve the same.
 
+### Core
+
+#### 1. Using JavaScript:
+Before we jump into building UI elements in React it's important to know how React differs from actual DOM manipulation. Below is example of building `Hello World` in javascript.
+```javascript
+<!-- Basic JavaScript-rendered Hello World -->
+<html>
+     /** root element, we would attach everything to */
+    <div id='root'>
+        <script type='text/javascript'>
+        /**
+          1. find the root element i.e rootElm
+          2. create an element for building context i.e element
+        */
+        const rootElm = document.getElementById('root');
+        /** add content, style etc **/
+        const element = document.createElement('div');
+        element.textContent = "Hello World";
+        element.className ='container';
+        element.title = 'using javascript'
+        /** append it to root, which will be rendered to UI **/
+        rootElm.appendChild(element);
+        </script>
+    </div>
+</html>
+```
+
+#### 2. Using React:
+Instead of using `document` property of `DOM` we will be using React api's to create an element and then to render the element to the React DOM ( which is different from actual DOM ).
+```javascript
+<!-- Basic React-rendered Hello World -->
+<body>
+    <div id="root"></div>
+    <script src="../react.development.js"></script>
+    <script src="../react-dom.development.js"></script>
+    <script type="text/javascript">
+        const rootElement = document.getElementById('root');
+        // instead of document.createElement
+        const reactElement = React.createElement('div', {
+            children: 'Hello World, React',
+            className: 'container'
+        })
+        //instead of rootElm.appendChild
+        ReactDOM.render(reactElement, rootElement);
+    </script>
+</body>
+```
+`children` in the `React.createElement` is content or any child elements present between the `div`. Example: In `<div> HI </div>` HI becomes the children. If we have multiple elements such as `span` or `h1` or `div` then we can pass array of elements like `children: [hiElement, byeElement]` where these elements are created using `React.createElement`.
+
+#### 3. Using React and JSX:
+Instead of using `React.createElement` we can use JSX syntax to create elements however we cannot use them directly without converting into `JavaScript`. Hence the transpiler, transpiler looks for code with in `script` tags and converts to javascript before loading.
+
+```javascript
+<body>
+    <div id="root"></div>
+    <script src="../react.development.js"></script>
+    <script src="../react-dom.development.js"></script>
+    /** load transpiler to convert JSX to javascript */
+    <script src="../babel.js"></script>
+    /** change type from text/javascript to text/babel */
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
+        // JSX code below
+        const reactElement = (
+            <div className='container'>
+                <h1> Hello, World </h1>
+                <span> Example of Child element </span>
+            </div>
+        )
+        ReactDOM.render(reactElement, rootElement);
+    </script>
+</body>
+```
 
 ### Deep Dive
 
