@@ -49,6 +49,7 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 40. Absolute path means that it's always appended right after your domain. Therefore, both syntaxes (with and without leading slash) lead to `example.com/some-path`. Relative paths are appended to the already existing path not add path right after the domain name, i.e `example.com/some-path/relative-path`.
 41. Order is very important while using `<Route>` and `<Link>` from 'react-router-dom'. If we wrap all the `<Route>` defined with `<Switch>..</Switch>` then it will only let load first matched pathname.
 42. `<Redirect from="" to="">` component can be used to load the page once user action is completed on different page, However if we don't use <Redirect/> with in `<Switch>..</Switch>` we will not have access to `from` property. In this case we can make use of `state` to conditionally check or use `this.props.history.push("/page")` or `this.props.history.replace("/page")` to achieve the same.
+43. Two Way Binding: If we are interested in displaying the state name in the input text box and then updated the state based on user input then we can do two way binding. Example: `<input type='text' onChange={this.handleChange} value={this.state.name}>`. where handleChange would be `handleChange =(event) => { this.setState({ name: event.target.value })}`.
 
 ### Core
 
@@ -292,7 +293,7 @@ constructor(props) ---> ComponentWillMount ---> render() ---> Render Child Compo
 ```javascript
 componentWillReceiveProps(nextProps) --> shouldComponentUdate(newProps, nextstate) --> componentWillUpdate(newProps, newState) -->render() ---> Update all child components ---> componentDidUpdate()
 ```
-we can make use of shouldComponentUdate method to compare if the newProps has been changed with respect to old props ( i.e newProps.person != props.person ) then only we can let the react know to execute the render() method. this helps in boosting the performance of the app. However we can implement this without this headache by usig pureComponent instead of Component in the class declaration and this will enforce the react to have the inbuilt check of shouldComponentUdate logic.
+we can make use of shouldComponentUdate method to compare if the newProps has been changed with respect to old props ( i.e newProps.person != props.person ) then only we can let the react know to execute the render() method. this helps in boosting the performance of the app. However we can implement this without this headache by using `pureComponent` instead of `Component` in the class declaration and this will enforce the react to have the inbuilt check of shouldComponentUdate logic.
 
 ```javascript
 import React, {Component} from `react`;
@@ -306,10 +307,11 @@ class Person extends PureComponent {
    ...
 }
 ```
+When pureComponent is used, it does `shallow` comparison between `old prop` and `old state` with `new props` and `new state`. However the main important thing here is it only compare the equality check between the two. Example: it will check the if object, array has same references as allow instead of comparing it's innermost property value. Doing innermost property check is called `deep` comparison which is is time consuming and hinders the performance. IMPORTANT : we need to make sure we don't mutate the data ( i.e state and props ) in component. Example: if the parent component mutates it's state then those changes will not be picked up in child component as `shallow` comparison is happening between current component props/states. Nice blog on [pureComponent](https://lucybain.com/blog/2018/react-js-pure-component/).
 
 #### 5. setState ( object style vs function style )
 -----------
-`setState` should be only place where initial state property should be changed. React process setState change request in batch process and they are asynchronous in nature. setState can be done in tow ways, one by passing an object and one by passing a callback function. It's always good practice to use the later one whenever the state change is depends on previous state.   
+`setState` should be only place where initial state property should be changed. React process setState change request in batch process and they are asynchronous in nature. setState can be done in two ways, one by passing an object and one by passing a callback function. It's always good practice to use the later one whenever the state change is depends on previous state.   
 
 [a]. setState() using object:
 ```javascript
@@ -1317,6 +1319,108 @@ axios.get("/get")
 })
 ```
 
+#### 19. Example App with State and handlerMethods
+---------------------------------------------------
+Example showws how we can display and update the state value using two way data binding also not mutate the state directly. For simplicity person component used in main component is not show ( which will shows card with text area where you can have two way data ).
+
+```jsx
+import React, { Component } from 'react';
+import './App.css';
+import Person from './Person/Person';
+
+class App extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      persons: [
+        { id: 1, name: 'Max', age: 28 },
+        { id: 2, name: 'Manu', age: 29 },
+        { id: 3, name: 'Stephanie', age: 26 }
+      ],
+      otherState: 'some other value',
+      showPersons: false
+    }
+  }
+
+  /**
+   * Updating the existing state property value without
+   * mutating the data directly. 
+   */
+  nameChangedHandler = ( event, id ) => {
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id;
+    });
+
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState( {persons: persons} );
+  }
+
+  /**
+   * Delete an element from the state without MUTATING the state like
+   * there two diffrent ways.
+   */
+  deletePersonHandler = (personIndex) => {
+    // 1. using ES6 filter 
+    const persons = this.state.persons.filter((data, index) => {
+      return index !== personIndex
+    })
+
+    this.setState({persons: persons});
+
+    // 2. using ES5 splice on copied object
+    // const persons = [...this.state.persons];
+    // persons.splice(personIndex, 1);
+    // this.setState({persons: persons});
+  }
+
+  togglePersonsHandler = () => {
+    this.setState(prevState => ({
+      showPersons: !prevState.showPersons
+    }));
+  }
+
+  render () {
+
+    let persons = null;
+
+    // conditional rendering of UI component 
+    if ( this.state.showPersons ) {
+      persons = (
+        <div>
+          {this.state.persons.map((person, index) => {
+            return <Person
+              click={()=>this.deletePersonHandler(index)}
+              name={person.name} 
+              age={person.age}
+              key={person.id}
+              changed={(event) => this.nameChangedHandler(event, person.id)} />
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="App">
+        <h1>Hi, I'm a React App</h1>
+        <p>This is really working!</p>
+        <button
+          onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        {persons}
+      </div>
+    );
+  }
+}
+
+export default App;
+```
 
 
 
