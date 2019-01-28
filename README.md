@@ -1347,19 +1347,24 @@ class App extends Component {
    * mutating the data directly. 
    */
   nameChangedHandler = ( event, id ) => {
+    // finding the index from an id
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
     });
 
+    // filtering the person for that index
     const person = {
       ...this.state.persons[personIndex]
     };
 
+    // updating the name for that right indexed person 
     person.name = event.target.value;
 
+    // getting all persons, updating to right one
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
+    // uodating the state
     this.setState( {persons: persons} );
   }
 
