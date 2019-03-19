@@ -1319,9 +1319,12 @@ axios.get("/get")
 })
 ```
 
-#### 19. Example App with State and handlerMethods
+### REACT by Examples:
+
+
+#### 1. Example App with State and handlerMethods
 ---------------------------------------------------
-Example showws how we can display and update the state value using two way data binding also not mutate the state directly. For simplicity person component used in main component is not show ( which will shows card with text area where you can have two way data ).
+Example shows how we can display and update the state value using two way data binding also not mutate the state directly. For simplicity person component used in main component is not show ( which will shows card with text area where you can have two way data ).
 
 ```jsx
 import React, { Component } from 'react';
@@ -1344,7 +1347,7 @@ class App extends Component {
 
   /**
    * Updating the existing state property value without
-   * mutating the data directly. 
+   * mutating the data directly.
    */
   nameChangedHandler = ( event, id ) => {
     // finding the index from an id
@@ -1357,7 +1360,7 @@ class App extends Component {
       ...this.state.persons[personIndex]
     };
 
-    // updating the name for that right indexed person 
+    // updating the name for that right indexed person
     person.name = event.target.value;
 
     // getting all persons, updating to right one
@@ -1373,7 +1376,7 @@ class App extends Component {
    * there two diffrent ways.
    */
   deletePersonHandler = (personIndex) => {
-    // 1. using ES6 filter 
+    // 1. using ES6 filter
     const persons = this.state.persons.filter((data, index) => {
       return index !== personIndex
     })
@@ -1396,14 +1399,14 @@ class App extends Component {
 
     let persons = null;
 
-    // conditional rendering of UI component 
+    // conditional rendering of UI component
     if ( this.state.showPersons ) {
       persons = (
         <div>
           {this.state.persons.map((person, index) => {
             return <Person
               click={()=>this.deletePersonHandler(index)}
-              name={person.name} 
+              name={person.name}
               age={person.age}
               key={person.id}
               changed={(event) => this.nameChangedHandler(event, person.id)} />
@@ -1427,7 +1430,59 @@ class App extends Component {
 export default App;
 ```
 
+#### 2. Counter App (increase or decrease)
+Description:
+Building react app to increase and decrease the count based on use click. Initial count is `10` and upon clicking `+` we should increase the count by 1 and if we click `-` then count should be decreased by 1.
 
+Implementation:
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+
+import "./styles.css";
+
+class Counter extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      counter: 10
+    }
+
+    //Need to bind this to have `this` context so we can reference later
+    this.handleIncrementClick = this.handleIncrementClick.bind(this);
+    this.handleDecrimentClick = this.handleDecrimentClick.bind(this);
+  }
+
+  // handler to operate on previous state than mutating the counter directly
+  handleIncrementClick = () => {
+    this.setState((prevState) => ({
+      counter: prevState.counter + 1
+    }))
+  }
+
+  handleDecrimentClick = () => {
+    this.setState((prevState) => ({
+      counter: prevState.counter - 1
+    }))
+  }
+
+  render(){
+    return (
+      <div>
+        <h2 className="counter">{this.state.counter}</h2>
+        <button className="counter-button" onClick={this.handleIncrementClick}>+</button>
+        <button className="counter-button" onClick={this.handleDecrimentClick}>-</button>
+      </div>
+    )
+  }
+}
+
+// react DOM related to render
+const rootElement = document.getElementById("root");
+ReactDOM.render(<Counter />, rootElement);
+```
+Demo:
+[Counter App](https://codesandbox.io/s/ryl638z74m)
 
 
 
