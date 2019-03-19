@@ -1484,7 +1484,69 @@ ReactDOM.render(<Counter />, rootElement);
 Demo:
 [Counter App](https://codesandbox.io/s/ryl638z74m)
 
+#### 3:  Like App (like / unlike)
 
+Description:   
+Creating an app to increase the like count by one and change the color using css property to blue ( see use of classname dependencies and style.css ) and if we click on the liked button again then we remove the like count by one and change color to normal ( unlike option ). Important: Adding and removing css class property to display the color behavior.
+
+Implementation:
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+import cx from "classnames";
+
+import "./styles.css";
+
+class LikeButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      likes: 100,
+      liked: false
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick = () => {
+    /**
+     * If it's not liked, then we will increase by 1 (i.e 101),
+     * if it's already liked, then we decrease by 1.
+     */
+    const calculatedLike = !this.state.liked
+      ? this.state.likes + 1
+      : this.state.likes - 1;
+
+    this.setState(prevState => ({
+      liked: !this.state.liked,
+      likes: calculatedLike
+    }));
+  };
+
+  render() {
+    // using classnames dependecies to add/remove css class on click
+    const btnClass = cx({
+      "like-button": true,
+      liked: this.state.liked
+    });
+
+    return (
+      <div>
+        <button className={btnClass} onClick={this.handleClick}>
+          <h2>
+            Like | <span className="likes-counter">{this.state.likes}</span>
+          </h2>
+        </button>
+      </div>
+    );
+  }
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<LikeButton />, rootElement);
+```
+Demo:  
+[Like App](https://codesandbox.io/s/jlqo4q5yn3)
 
 
 
