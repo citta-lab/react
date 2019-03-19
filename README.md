@@ -1545,7 +1545,7 @@ class LikeButton extends React.Component {
 const rootElement = document.getElementById("root");
 ReactDOM.render(<LikeButton />, rootElement);
 ```
-Demo:  
+Demo: 
 [Like App](https://codesandbox.io/s/jlqo4q5yn3)
 
 
