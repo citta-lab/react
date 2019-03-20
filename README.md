@@ -1546,7 +1546,7 @@ const rootElement = document.getElementById("root");
 ReactDOM.render(<LikeButton />, rootElement);
 ```
 Demo:
-![like app](/utils/LikeApp.gif)
+![like app](/utils/LikeApp.gif){:height="50%" width="50%"}
 [Like App](https://codesandbox.io/s/jlqo4q5yn3)
 
 
