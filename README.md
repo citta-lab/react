@@ -1489,6 +1489,8 @@ Demo:
 Description:   
 Creating an app to increase the like count by one and change the color using css property to blue ( see use of classname dependencies and style.css ) and if we click on the liked button again then we remove the like count by one and change color to normal ( unlike option ). Important: Adding and removing css class property to display the color behavior.
 
+Quick view of the app would like this [demo](/utils/LikeApp.gif).
+
 Implementation:
 ```jsx
 import React from "react";
@@ -1546,7 +1548,6 @@ const rootElement = document.getElementById("root");
 ReactDOM.render(<LikeButton />, rootElement);
 ```
 Demo:
-![like app|312x185](/utils/LikeApp.gif)
 [Like App](https://codesandbox.io/s/jlqo4q5yn3)
 
 
