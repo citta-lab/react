@@ -1434,6 +1434,8 @@ export default App;
 Description:
 Building react app to increase and decrease the count based on use click. Initial count is `10` and upon clicking `+` we should increase the count by 1 and if we click `-` then count should be decreased by 1.
 
+Quick view of the counter app would like this [demo](/utils/CounterApp.gif).
+
 Implementation:
 ```jsx
 import React from "react";
@@ -1489,7 +1491,7 @@ Demo:
 Description:   
 Creating an app to increase the like count by one and change the color using css property to blue ( see use of classname dependencies and style.css ) and if we click on the liked button again then we remove the like count by one and change color to normal ( unlike option ). Important: Adding and removing css class property to display the color behavior.
 
-Quick view of the app would like this [demo](/utils/LikeApp.gif).
+Quick view of the like app would like this [demo](/utils/LikeApp.gif).
 
 Implementation:
 ```jsx
