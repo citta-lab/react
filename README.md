@@ -1553,6 +1553,164 @@ Demo:
 [Like App](https://codesandbox.io/s/jlqo4q5yn3)
 
 
+#### 4: Cookie App
+
+Description: Demonstrating how we can benefit from using the browser cookies to store and extracts values from API calls for session related information. Goal of this app is to read and write/update data to browser cookie based on
+response data.
+
+Quick view of the like app would like this [demo](/utils/LikeApp.gif).
+
+Implementation:   
+4.1 App:
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+
+import "./styles.css";
+import { writeCookie, readCookie } from "../utils/accessUtils";
+
+class LocalStore extends React.Component {
+  constructor(props) {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  /**
+   * Initial Load: This is to depict calling some API to get
+   * data, then based on the response we would set both cookie
+   * and state simultaneously.
+   */
+  componentDidMount() {
+    // pretend we got this data from API call, now setting it to cookie
+    writeCookie({ name: "Tony", age: 12, time: Date.now() });
+    this.setState({
+      name: "Tony",
+      age: 12,
+      time: Date.now()
+    });
+  }
+
+  /**
+   * Why: Trying to depict updating cookie data based on some
+   * API response, but i also wanted to prove we can set & get
+   * data from the cookie. Hence reading data from cookie to set
+   * data in the state.
+   */
+  handleClick = () => {
+    // pretending these values are recived from API call
+    writeCookie({
+      name: "Bob",
+      age: this.state.age,
+      time: new Date(Date.now())
+    });
+
+    // extracting and setting value to display
+    let { name, time } = readCookie();
+    this.setState(prevState => ({
+      age: prevState.age + 5,
+      name,
+      time
+    }));
+  };
+
+  render() {
+    /**
+     * Why: Instead of initializing `this.state = {}` to an empty object
+     * for initial load we can do something like below to avoid stale code.
+     * This way we can grab values from state if present otherwise it will
+     * be empty.
+     */
+    let { name, age, time } = this.state || {};
+
+    return (
+      <div className="LocalStore">
+        <h2>Cookie Example </h2>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Time Now</th>
+          </tr>
+          <tr>
+            <td>{name}</td>
+            <td>{age}</td>
+            <td>{time}</td>
+          </tr>
+        </table>
+        <br />
+        <button class="button" onClick={this.handleClick}>
+          {" "}
+          LOAD{" "}
+        </button>
+      </div>
+    );
+  }
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<LocalStore />, rootElement);
+```
+4.2 Model
+```javascript
+import storageUtil from "./storageUtil";
+
+const KEY = "COOKIE_TEST";
+
+/**
+ * Focus is to update the cookie, hence merging the data.
+ * Important: Object needs to be converted to string before
+ * saving in the cookie hence `JSON.stringify(newValue)`.
+ * @param {object} value - values to set in the cookie
+ */
+export function writeCookie(value) {
+  const currentValue = readCookie();
+  const newValue = { ...currentValue, ...value };
+  storageUtil.setItem(KEY, JSON.stringify(newValue));
+}
+
+/**
+ * Convert it to an object before returning, so we can
+ * operate merge easily.
+ */
+export function readCookie() {
+  return JSON.parse(storageUtil.getItem(KEY));
+}
+
+export default { readCookie, writeCookie };
+```
+
+4.3 Accessor
+```javascript
+export default {
+  /**
+   * Cookie values are seperated by `;` hence the split, which
+   * results in an array so we can filter it to find the key &
+   * return first value after `=`.
+   * @param {string} key - Key needs to be extracted
+   */
+  getItem(key) {
+    const cookieHash = document.cookie
+      .split(";")
+      .filter(item => item.includes(`${key}=`));
+
+    console.log(" ****: " + JSON.stringify(cookieHash));
+    return cookieHash[0] ? cookieHash[0].split("=")[1] : null;
+  },
+
+  /**
+   * set values with respect to the key.
+   * @param {string} key -
+   * @param {object} value
+   */
+  setItem(key, value) {
+    document.cookie = `${key}=${value}`;
+  }
+};
+```
+
+Demo:
+[Cookie App](https://codesandbox.io/s/14540z2jxj)
+
 
 Reference:
 1. [React - this.input.value vs handle change](https://stackoverflow.com/questions/46572616/react-this-input-value-vs-handle-change/46572702#comment80106399_46572702)
