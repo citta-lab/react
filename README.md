@@ -5,6 +5,8 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 
 > if we are creating new app then we need to start by executing `sudo npm install -g create-react-app` where -g is global installation of create-react-app. In out next step we should be creating the app by executing `create-react-app firstreactapp`.
 
+React embraces the concept of `composibality` by letting the developer write small unit of function (called as components) which focuses on doing one thing. These components responsible of returning `UI` element rather than object compared to javascript functions.
+
 ### Pointers
 
 1. Don't use { and " " together when embedding javascript expressions in an attribute. Example: `const element = <img src={"user.avatarUrl"}></img>;` will throw exception instead do `const element = <img src={user.avatarUrl}></img>;`
@@ -50,6 +52,9 @@ React is javascript library not a framework like AngularJS, Angular and most of 
 41. Order is very important while using `<Route>` and `<Link>` from 'react-router-dom'. If we wrap all the `<Route>` defined with `<Switch>..</Switch>` then it will only let load first matched pathname.
 42. `<Redirect from="" to="">` component can be used to load the page once user action is completed on different page, However if we don't use <Redirect/> with in `<Switch>..</Switch>` we will not have access to `from` property. In this case we can make use of `state` to conditionally check or use `this.props.history.push("/page")` or `this.props.history.replace("/page")` to achieve the same.
 43. Two Way Binding: If we are interested in displaying the state name in the input text box and then updated the state based on user input then we can do two way binding. Example: `<input type='text' onChange={this.handleChange} value={this.state.name}>`. where handleChange would be `handleChange =(event) => { this.setState({ name: event.target.value })}`.
+45. React is declarative coding: Example: `<button onClick={handleUser}>Activate User</button>` we are not defining any `addEventListener()` but letting the react worry about that part when the user clicks on the button. Incase of Imperative code we instructs JavaScript on how it should perform each step.
+46. React is unidirectional data flow. Data always flow from PARENT to CHILDREN by using props and if we need PARENT to be updated then we use callback. In frameworks like Angular, Ember data flow is bi-directional.
+47. React uses javascript object structure to build the UI instead of string template ( diff between other frameworks) which then be used to build the DOM nodes.
 
 ### Core
 
@@ -1718,3 +1723,6 @@ Reference:
 3. [React How To](https://github.com/petehunt/react-howto)
 4. [Composition vs Inheritance](http://blog.brew.com.hk/react-101-composition-vs-inheritance/)
 5. [React Fragments](https://reactjs.org/blog/2017/11/28/react-v16.2.0-fragment-support.html#support-for-fragment-syntax)
+6. [composibality](https://www.linkedin.com/pulse/compose-me-function-composition-javascript-kevin-greene)
+7. [Imperative Declarative](https://stackoverflow.com/questions/33655534/difference-between-declarative-and-imperative-in-react-js)
+8. [Blog on Imperative vs Delcarative](https://tylermcginnis.com/imperative-vs-declarative-programming/)
