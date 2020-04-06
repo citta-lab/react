@@ -55,6 +55,10 @@ React embraces the concept of `composibality` by letting the developer write sma
 45. React is declarative coding: Example: `<button onClick={handleUser}>Activate User</button>` we are not defining any `addEventListener()` but letting the react worry about that part when the user clicks on the button. Incase of Imperative code we instructs JavaScript on how it should perform each step.
 46. React is unidirectional data flow. Data always flow from PARENT to CHILDREN by using props and if we need PARENT to be updated then we use callback. In frameworks like Angular, Ember data flow is bi-directional.
 47. React uses javascript object structure to build the UI instead of string template ( diff between other frameworks) which then be used to build the DOM nodes.
+48. React's `.createElement()` method takes in a description of an element and returns a plain JavaScript object.
+49. In React we have to use `htmlFor` instead of `for` and `className` instead of `class'. As these 'for', `class` are reserved word in JavaScript.
+50. `render()` method is the only required method in react class component.
+51. If we are interested in passing data in onClick callback then we could do using annonymous function. `<button className='remove-item' onClick={() => props.onDelete(item)}>`. 
 
 ### Core
 
@@ -86,6 +90,9 @@ Before we jump into building UI elements in React it's important to know how Rea
 #### 2. Using React:
 Instead of using `document` property of `DOM` we will be using React api's to create an element and then to render the element to the React DOM ( which is different from actual DOM ).
 ```javascript
+import react from 'react';
+import ReactDOM from 'react-dom';
+
 <!-- Basic React-rendered Hello World -->
 <body>
     <div id="root"></div>
@@ -766,6 +773,8 @@ The best practice is to implement the following things to sync the internal stat
 * React recommends using `onChange` over `onInput` which fires on each change.The reason is that React’s onChange wrapper behavior provides consistency.       
 * Use React form's `onSubmit` over HTML for submit. Example: ` <form onSubmit={this.handleSubmit}> ..</form>`.      
 
+>> In Short, Controlled components refer to components that render a form, but the "source of truth" for that form state lives inside of the component state rather than inside of the DOM.
+
 Form implementation can also be done using uncontrolled component, further discussion is in this [blog](https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/).
 
 
@@ -1323,6 +1332,23 @@ axios.get("/get")
   //....
 })
 ```
+
+### 19. LifeCycle Events 
+
+Below are the order of execution happens when react app renders on the page. 
+
+#### 19.1 Rendering Order
+1. constructor()
+2. getDerivedStateFromProps()
+3. render()
+4. componentDidMount()
+
+#### 19.2 Re-Rendering Order
+1. getDerivedStateFromProps()
+2. shouldComponentUpdate()
+3. render()
+4. getSnapshotBeforeUpdate()( more details[https://reactjs.org/docs/react-component.html#getsnapshotbeforeupdate])
+5. componentDidUpdate()
 
 ### REACT by Examples:
 
