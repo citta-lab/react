@@ -549,6 +549,15 @@ Image we have defined navigation in our `App.js` return function as follows,
   </nav>
 </header>
 ```
+Lets understand the example of updating anchor tag to Link tag,
+Before:
+```html
+<a href='#create' onClick={() => callback()} className='add-item'> Add Item</a>
+```
+After:
+```html
+<Link to='/create' className='add-item'> Add Item </Link>
+```
 
 ##### 9.1 Path
 Now we need to define routes to load the page when the user clicks on these `href`, so we implement route from the library. While using `<Route />` from the react-router-dom we need to pass in the path which will direct the page to be loaded. `<Route />` is self closing component, below is the example of using home page routing.
