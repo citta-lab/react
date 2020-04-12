@@ -708,6 +708,139 @@ Further we can also make use of `this.props.match.url` to dynamically load the p
 The purpose of redux is to eliminate the long process of sharing state between multiple component to reach the intended component ( predictability in state ). What i mean is, By default React has powerful aspect `state` which manages the local state of the component but if the `state` needs to be shared between different (sibling) component then we design an app in such a way we keep the shared `state` in the parent and access the in it's child component. However if the intended component is 4 level down the line ( child of child of child of child ) then the `state` needs to be passed down to all of intended components parent. Also redux helps in caching to have better control on API calls.
 The complete [Redux](https://github.com/citta-lab/react/tree/master/react-playground/redux) is discussed here.
 
+Redux is a javascript state container can be used not just in React apps but any javascript apps.Main parts of Redux are ( example from Udacity program ).
+* Store
+* Actions
+* Reducers
+
+Step 1:
+##### 10.1 : ACTIONS
+`ACTIONS` are set of rules defined to update the store. These are just objects with `type` and some property depending on the type of action. We can only use these ACTIONS to make changes to the state in store. We will look into STORE later. 
+
+Imagine we have a state in store looks like below,
+```javascript 
+const state = [{ flavor: 'Chocolate', count: 12 }];
+```
+Then we can create adding and deleting flavor using below actions,
+```javascript 
+{
+  type: 'ADD_FLAVOR'
+  todo: {
+    flavor: 'Vanilla',
+    count: 30
+  }
+}
+
+// similarly delete can be 
+{
+  type: 'DELETE_FLAVOR',
+  flavor: 'Chocolate'
+}
+```
+
+STEP 2:
+##### 10.2 Reducers:
+Is a PURE function which is used to update the `STATE` by taking current state and a `ACTION` to produce new `STATE`. Below is the example of REDUCER function used to delete and add items from/to state.
+```javascript 
+const state = [{ flavor: 'Chocolate', count: 36 }, { flavor: 'Vanilla', count: 210 }];
+
+// Delete Example
+const deleteAction = { type: 'DELETE_FLAVOR', flavor: 'Vanilla' }
+
+function deleteReducer(state, action){
+    if(action.type === 'DELETE_FLAVOR'){
+        return state.filter((item) => item.flavor !== action.flavor);
+    }
+    return state;
+}
+
+let newState = deleteReducer(state, deleteAction);
+console.log(newState); // [{ flavor: 'Chocolate', count: 36 }]
+
+// Add Example
+const addAction = { type: 'ADD_FLAVOR', todo: { flavor: 'Peach', count: 1229  }}
+
+function addReducer (state =[], action){
+  if( action.type === 'ADD_FLAVOR' ){
+    return state.concat([action.todo]);
+  }
+
+  return state;
+}
+
+newState = addReducer(state, addAction);
+console.log(newState); // [{ flavor: 'Chocolate', count: 36 }, { flavor: 'Peach', count: 1229  }]
+```
+
+STEP 3:
+##### 10.3 Store :
+
+Let us understand by creating store with all these features, and see how ACTIONS and REDUCERS are used in the store to update the state.
+- Store 
+--  State ( initializing state tree )
+--  Getter Method ( getting state )
+--  State Listner ( update callbacks keeper )
+--  Dispatcher ( running reducer )
+
+The idea of store is wrapping the state management within a function and allowing the state to be accessed via getter method, So if we want to cover the `State Tree` and `Getter Method` then the createStore function would look something like below,
+
+```javascript 
+function createStore(){
+  let state; // state tree
+  const getState = () => state;  // getter method
+  return {
+    getState 
+  }
+}
+```
+We can let the user add callbacks which can be excuted when the state is updated. So previous code will be udpdated to,
+```javascript 
+function createStore(){
+  let state; 
+  const listners = [];
+  const getState = () => state;  
+  const subscribe = (callbackFun) => listners.push(callbackFun); 
+  return {
+    getState,
+    subscribe
+  }
+}
+/** getting update */
+const store = createStore(); // returns { getstate, subscribe }
+store.subsribe(() => console.log('Current state is : '+store.getState())); // prints the state
+```
+Next step we can allow users to unsubsribe and use dispatch to UPDATE the state using REDUCER ( with the help of ACTIONS ) and call the callbackFun which are intendend to be excuted when there is a state update.
+```javascript 
+function createStore(reducer){
+  let state; // state tree
+  const listners = []; // holds all registered callbacks
+  
+  const getState = () => state;  // returns current state
+  
+  // way to register callbacks to run when state is updated (takes in functions that will be called when the state changes)
+  const subscribe = (callbackFun) => {
+    listners.push(callbackFun); 
+    return () => {
+      listners = listners.filter((listner) => callbackFun !== listner );
+    }
+  }
+
+ // way to update the state, then call the registered callbacks
+  const dispatch = (action) => {
+    state = reducer(state, action);
+    listners.forEach((callbackFun) => callbackFun());
+  }
+
+  return {
+    getState,
+    subscribe,
+    dispatch
+  }
+}
+
+// Note: 'REDUCER' can be one reducer which handles all the ACTION's instead of having different reducer for different actions
+```
+
 #### 11. Convert Functional to Class Component
 In the first example we will look into displaying Hello
 
