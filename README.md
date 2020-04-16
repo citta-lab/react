@@ -1494,8 +1494,180 @@ Below are the order of execution happens when react app renders on the page.
 5. componentDidUpdate()
 
 
-#### 20. REDUX-REACT
+#### 20. REDUCERS with Redux
+In this section we will focus on how we can make use of createStore provided by REDUX and also the feature called combinedReducers to pass multiple reducers without needing to create a function handle that. 
 
+##### 20.1 : Using Root Reducer
+```javascript 
+import { createStore } from 'redux';
+
+// learner reducer
+function learner(state=[], action){
+  if(action.type === 'ADD_LEARNER'){
+    return state.concat([action.learner])
+  }
+  return state
+}
+
+// instructor reducer
+function instructor(state=[], action){
+  if(action.type === 'ADD_INSTRUCTOR'){
+    return state.concat([action.instructor])
+  }
+  return state
+}
+
+// root reducer
+function reducer (state = {}, action) {
+  return {
+    learner: todos(state.learner, action),
+    instructor: goals(state.instructor, action),
+  }
+}
+
+// using it in store while initializing 
+const store = createStore(reducer); // <-- using reducer to handle multiple reducers
+
+// dispatching action to add
+store.dispatch({
+  type: 'ADD_LEARNER',
+  learner: {
+    id: 123,
+    name: 'Bob',
+    class: 'Senior'
+  }
+})
+```
+
+##### 20.2 : Using CombinedReducer
+Hence root reducers job was to adding multiple reducers together, Redux has provided out of the box solution to handle more than one reducers. So we will still refer reducers from previous example but not write `reducer` function now.
+
+```javascript
+import { createStore, combinedReducers } from 'redux' ;
+
+// note: learner and instructor are reducers
+const store = createStore(combinedReducers({
+  learner,
+  instructor
+}))
+
+// dispatching action to add
+store.dispatch({
+  type: 'ADD_INSTRUCTOR',
+  learner: {
+    id: 099,
+    name: 'Adam',
+    subject: 'Math'
+  }
+})
+```
+Another example of using combinedReducers is below,
+```javascript 
+import { combineReducers } from 'redux';
+import paymentReducer from './payment/paymentReducer';
+import studentReducer from './student/studentReducer';
+
+const rootReducer = combineReducers({
+    payment: paymentReducer,
+    student: studentReducer
+});
+
+export default rootReducer;
+```
+
+##### 20.3 : Breaking into Reducers
+If the data structure if nested then we need to build a robust reducer to avoid doing spread operation to keep-up with the immutability, below is the exaple from udacity. 
+```javascript 
+{
+  users: {},
+  setting: {},
+  tweets: {
+    btyxlj: {
+      id: 'btyxlj',
+      text: 'What is a jQuery?',
+      author: {
+        name: 'Tyler McGinnis',
+        id: 'tylermcginnis',
+        avatar: 'twt.com/tm.png'
+      }   
+    }
+  }  
+}
+```
+If we jump staright into writing reducers then prematurely we will endup complicating things by adding reducers like below,
+```javascript 
+const rootReducer = combineReducers({
+  users,
+  settings,
+  tweets
+})
+
+function tweets (state = {}, action) {
+  switch(action.type){
+      case ADD_TWEET :
+        ...
+      case REMOVE_TWEET :
+        ...
+      case UPDATE_AVATAR :
+        return {
+          ...state,
+          [action.tweetId]: {
+            ...state[action.tweetId],
+            author: {
+              ...state[action.tweetId].author,
+              avatar: action.newAvatar 
+            }
+          }
+        }
+  }
+}
+```
+Better way to write reducers by breaking update avatar into smaller reducers  
+```javascript 
+function author (state, action) {
+  switch (action.type) {
+      case : UPDATE_AVATAR
+        return {
+          ...state,
+          avatar: action.newAvatar
+        }
+      default :
+        state
+  }
+}
+
+function tweet (state, action) {
+  switch (action.type) {
+      case ADD_TWEET :
+        ...
+      case REMOVE_TWEET :
+        ...
+      case : UPDATE_AVATAR
+        return {
+          ...state,
+          author: author(state.author, action)
+        }
+      default :
+        state
+  }
+}
+
+function tweets (state = {}, action) {
+  switch(action.type){
+      case ADD_TWEET :
+        ...
+      case REMOVE_TWEET :
+        ...
+      case UPDATE_AVATAR :
+        return {
+          ...state,
+          [action.tweetId]: tweet(state[action.tweetId], action)
+        }
+      default :
+        state
+  }
+}
+```
 
 
 ### REACT by Examples:
