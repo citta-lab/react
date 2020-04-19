@@ -842,6 +842,28 @@ function createStore(reducer){
 ```
 Example of [adding](https://gist.github.com/citta-lab/431196ccd77d11a6751372ffab308704) item to store and deleting item from the store. Complete [example](https://github.com/udacity/reactnd-redux-todos-goals/blob/more-actions/index.js) of Adding, deleting, toggling boolean in store using reducer from udacity. However as the app state grows we will have more state to manage, hence the corresponding reducers. To solve this problem `root reducers` are created and Tyler has great explanation code here with one reducer which will return more than one reducers state which can used while creating store. [root](https://github.com/udacity/reactnd-redux-todos-goals/blob/combine-reducers/index.js) reducer example.
 
+##### 10.4 Middlware :
+
+Until now we have been store from the librabry, reducer, actions and dispather to get and update the state in the store. If we want to add a middleware to perform some checks or mutation ( ex: logging, validation ) then it has to be performed between calling `dispatcher` and calling `reducer` which is the implementation details abstracted away from us ( aka is defined in store ). Hence Redux provides a out of the box solution to add these middlewares and will be ran after calling dispatch and before calling reducer. 
+
+```javascript 
+const store = Redux.createStore(reducer, Redux.applyMiddleware(middlewareOne, middlewareTwo));
+
+// defining middlewareOne
+function middlewareOne(store){
+  return function (next){  // calls next middlewareTwo once middlewareOne is called
+    return function (action){
+      ....
+      ....
+      return next(action)
+    }
+  }
+}
+```
+
+
+
+
 #### 11. Convert Functional to Class Component
 In the first example we will look into displaying Hello
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redux basic example</title>
+        <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+        <script src="https://unpkg.com/redux-undo@1.0.1/lib/index.js"></script>
+    </head>
+  <div>
+    <h1>ASSIGNMENT</h1>
+    <input id='assignment' placeholder="Please add assignment"/>
+    <button id='addAssignment'>Add Assignment</button>
+    <ul id='assignmentList'></ul>
+</div>
+<body>
+<script>
+
+   // STEP 1: Define Reducers
+    const assignmentReducer = (state=[], action) => {
+        if(action.type === 'ADD_ASSIGNMENT'){
+            return state.concat([action.assignment])
+        }
+        return state;
+    }
+
+    // STEP 2: Define Middleware
+    const loggingMiddleware = (store) => (next) => (action) => {
+        if(action.type === 'ADD_ASSIGNMENT'){
+            console.log(`New Assignment ${action.assignment.name} will be added.`);
+        }
+        const result = next(action); // calls next middleware or dispatcher if no middleware
+        console.log('The new state from store: ', store.getState())
+        return result;
+    }
+
+    // STEP 3: Define store with option to add multiple reducers and middleware
+    const store = Redux.createStore(
+            Redux.combineReducers({assignment: assignmentReducer}), 
+            Redux.applyMiddleware(loggingMiddleware)
+    );
+
+    // STEP 4: Define subsribe to which is called after store update ( called last )
+    store.subscribe(() => {
+        this.removeOldList();
+        this.updateDOM();
+    });
+
+    function removeOldList(){
+        document.getElementById('assignmentList').innerHTML = ''; // remove old list
+    }
+
+    function updateDOM(){
+        const { assignment } = store.getState();
+        assignment.forEach((a) => {
+            const node = document.createElement('li');
+            const text = document.createTextNode(a.name);
+            node.appendChild(text);
+            document.getElementById('assignmentList').appendChild(node); // add all the new list 
+        })
+    }
+
+    // STEP 4: Define function to trigger upon user click
+    function addAssignment (){
+        const inputValue = document.getElementById('assignment').value;
+
+        // STEP 4.1: Dispatch action to add assignment  
+        store.dispatch({ 
+            type: 'ADD_ASSIGNMENT',
+            assignment: {
+                name: inputValue,
+                class: 2020
+            }
+        })
+    }
+
+    // STEP 5: Calling the function to add assignment
+    document.getElementById('addAssignment').addEventListener('click', addAssignment);
+</script>
+</body>
+</html>
