@@ -1596,6 +1596,7 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 ```
+[Example](https://github.com/citta-lab/react/blob/master/react-playground/code-examples/ReduxExample.html) of using `combinedReducers` and `applyMiddleware` from REDUX. 
 
 ##### 20.3 : Breaking into Reducers
 If the data structure if nested then we need to build a robust reducer to avoid doing spread operation to keep-up with the immutability, below is the exaple from udacity. 
