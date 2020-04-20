@@ -1692,6 +1692,44 @@ function tweets (state = {}, action) {
 }
 ```
 
+### 21: Redux in React
+
+Now we can start using the redux in react, main important thing we should be paying attention is where does `store.dispatch` sits and sending `props` to Redux.
+
+
+
+
+### 22. Ref's: 
+
+Ref's are like drilling `hole` between React and DOM so it can bypass virtual DOM. This can be used whenever we need to do below things,
+- Managing focus, text input 
+- Integrating with thrid party like d3 or dojo
+- Imperative Animations
+
+Example:
+```jsx
+class Assignment extends React.Component {
+  addAssignment = e => {
+    e.preventDefault();
+    console.log(this.input.value); // will be assignment 
+  };
+
+  render() {
+    return (
+      <div>
+        <input
+          type="text"
+          placeholder="Add Assignment"
+          /** we are storing input value in Assignment class instance variable this.input */
+          ref={(input) => this.input = input}
+        />
+
+        <button onClick={this.addAssignmnet}>Add</button>
+      </div>
+    );
+  }
+}
+```
 
 ### REACT by Examples:
 

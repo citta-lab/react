@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>React Redux Example</title>
+        <script src="https://unpkg.com/react@16.3.0-alpha.1/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <!--React will mount here-->
+    <div id='reactapp'></div>
+<body>
+<!--React Code goes here, so Babel can transpile-->
+<script type='text/babel'>
+const assignmentReducer = (state=[], action) => {
+    if(action.type === 'ADD_ASSIGNMENT'){
+        return state.concat([action.assignment])
+    }
+    return state;
+}
+
+const store = Redux.createStore(
+    Redux.combineReducers({assignment: assignmentReducer})
+);
+
+store.subscribe(() => console.log(store.getState()))
+
+
+function AssignmentList (props) {
+    const { assignment } = props;
+    const list = assignment.map((d) => <li key={d.name}>{d.name}</li>)
+    return (
+        <div>
+            <ul>
+                {list}
+            </ul>
+        </div>
+    )
+}
+
+
+class Assignment extends React.Component{
+
+    addAssignment = (event) => {
+        event.preventDefault();
+
+        const value = this.input.value
+        this.input.value = '';  
+
+        this.props.store.dispatch({
+            type: 'ADD_ASSIGNMENT',
+            assignment: {
+                name: value,
+                class: 2019
+            }
+        })
+    }
+
+
+    render(){
+        return(
+            <div>
+                <h1>Assignment</h1>
+                <input 
+                    type='text'
+                    placeholder='Add assignment'
+                    ref={(input) => this.input = input} // instead of using sate, we grab from DOM
+                />
+                <button onClick={this.addAssignment}>Add Assignment</button>
+                <hr/>
+                <AssignmentList assignment={this.props.assignment}/>
+            </div>
+        )
+    }
+}
+
+
+class App extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            assignment: []
+        }
+    }
+
+    componentDidMount(){
+        this.props.store.subscribe(() => {
+            const { assignment } = this.props.store.getState();
+
+            this.setState(() => ({
+                assignment
+            }))
+        })
+    }
+    render(){
+        return (
+            <Assignment  assignment={this.state.assignment}  store={this.props.store}/>
+        )
+    }
+}
+
+// Adds react to dom
+ReactDOM.render(
+    <App store={store}/>,
+    document.getElementById('reactapp')
+)
+</script>
+</body>
+</html>
