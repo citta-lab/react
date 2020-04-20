@@ -256,6 +256,37 @@ If each component owns it's own date then how can we pass parent component state
 
 > imagine a component tree as a waterfall of props, each component’s state is like an additional water source that joins it at an arbitrary point but also flows down.
 
+##### 3.1 Optimistic Update: 
+Typically we will fetch an API to get, update, delete items from the UI and once the data is fetched we will update the state so react will render the data on the page, this might work great when we do get but often during remove/delete or update we sometimes want to reflect the UI with latest changes and handle API update gracefully, i.e Optimistic Update.
+```javascript 
+// Appraoch 1: Always relay on database and will be delay in deleting items.
+removeMovie = (movie) => {
+  return API.delete(movie.id)
+  .then((data) => {
+    this.setState(() => ({
+      movies: data // always updated data from database
+    }))
+  })
+}
+
+// Approach 2: Update the state, then handle the database
+removeMovie = (movie) => {
+
+  this.setState((prevState) => ({
+    movies: prevState.movies.filter((m) => m.id !== movie.id)
+  }))
+
+  return API.delete(movie)
+  .catch(() => {
+    this.setState((prevState) => ({
+      movies: prevState.movies.concat(movie)
+    }));
+    console.error('Error deleting the movie : '+movie.id)
+  })
+}
+```
+
+
 #### 4. Render():
 ------------------
 Render method in react should be kept as pure functions and responsible for handling the request to DOM and nothing else. We can always add data call such has API / Ajax request inside the render but it will hinder the performance and divert from the design pattern. So to access / fetch data from the API and then manage these data via component state ( managing component data via state is called controlled component ) can be achieved using react's lifecycle hooks.
@@ -1696,7 +1727,7 @@ function tweets (state = {}, action) {
 
 Now we can start using the redux in react, main important thing we should be paying attention is where does `store.dispatch` sits and sending `props` to Redux.
 
-
+Example of handling intial data load in redux, removing item from redux, updating DOM, also implemting optimistic update from Tyler [gitlink](https://github.com/udacity/reactnd-redux-todos-goals/commit/5186502ac6461c2e88ba1dbf1ec158764c84823c).
 
 
 ### 22. Ref's: 
