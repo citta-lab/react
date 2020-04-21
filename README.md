@@ -59,6 +59,7 @@ React embraces the concept of `composibality` by letting the developer write sma
 49. In React we have to use `htmlFor` instead of `for` and `className` instead of `class'. As these 'for', `class` are reserved word in JavaScript.
 50. `render()` method is the only required method in react class component.
 51. If we are interested in passing data in onClick callback then we could do using annonymous function. `<button className='remove-item' onClick={() => props.onDelete(item)}>`. 
+52. Redux store can only support the synchronous flow of data. Middleware like `thunk` helps support asynchronicity in a Redux application. Thunk is like a wrapper for the store’s dispatch() method; rather than returning action objects, we can use thunk action creators to dispatch `functions` (or even or Promises).
 
 ### Core
 
