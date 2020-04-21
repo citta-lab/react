@@ -1725,8 +1725,9 @@ function tweets (state = {}, action) {
 
 ### 21: Redux in React
 
-Now we can start using the redux in react, main important thing we should be paying attention is where does `store.dispatch` sits and sending `props` to Redux.
+Now we can start using the redux in react, main important thing we should be paying attention is where does `store.dispatch` sits and sending `props` to Redux. Example of using Redux with React [here](https://github.com/citta-lab/react/blob/master/react-playground/code-examples/ReactReduxExample.html)
 
+Ref:
 Example of handling intial data load in redux, removing item from redux, updating DOM, also implemting optimistic update from Tyler [gitlink](https://github.com/udacity/reactnd-redux-todos-goals/commit/5186502ac6461c2e88ba1dbf1ec158764c84823c).
 
 
@@ -1761,6 +1762,7 @@ class Assignment extends React.Component {
   }
 }
 ```
+`Refs` are called right after render and before componentDidMount. So if we add ref to the DOM node then we can always reference them after or in componentDidMount. But if we are planning to stick with functional components or use hooks then we can't use this ref rather use `useRef` hook.
 
 ### REACT by Examples:
 
