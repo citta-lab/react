@@ -892,8 +892,53 @@ function middlewareOne(store){
   }
 }
 ```
+##### 10.5 Thunk 
+Often we have been writting API calls as part of the class component or wrap with useEffect so it can get called after dom is mounted. Though it is a good practice we are not really seperating the concerns rather mixing it. Why should UI or rendering logic be worried about fetching ? This same concept has been used in `REDUX` as well to seperate the API logic from the UI functions by building new `ACTION` for fetching. Below example shows before and after use case,
+```jsx
+const AssignmentManager = (props) => {
+
+  deleteAPI(assignmentName){
+    const { dispatch } = props.store;
+    dispatch({ type: 'DELETE_ASSIGNMENT', assignment: { name: assignmentName, class: 2020}); // updated the store
+
+    // API logic is here
+    return fetchAPI.delete(assignmentName){
+      .catch((e) => {
+        dispatch({ type: 'ADD_ASSIGNMENT', assignment: { name: assignmentName, class: 2020}}); // adding back as we couldn't delete
+        console.error('couldnt delete '+assignmentName);
+      })
+    }
+  }
+}
+```
+with the help of thunk we could re-write the same as
+```jsx
+import ReduxThunk from 'redux-thunk'; 
+
+const handleDelete = (assignment) => {
+  return (dispatch) => {
+    dispatch({ type: 'ADD_ASSIGNMENT', assignment: { name: assignmentName, class: 2020}});
+
+      return fetchAPI.delete(assignmentName){
+        .catch((e) => {
+          dispatch({ type: 'ADD_ASSIGNMENT', assignment: { name: assignmentName, class: 2020}}); // adding back as we couldn't delete
+          console.error('couldnt delete '+assignmentName);
+        })
+      }
+    }
+  }
+}
 
 
+const AssignmentManager = (props) => {
+  const { dispatch } = props.store;
+  dispatch(handleDelete(assignment)); // pay attention now dispatch is emitting function not objects ( i.e actions )
+}
+
+// to make all this work Thunk need to be added to middleware
+const store = createStore(Redux.combineReducers({assignment}), Redux.applyMiddleware(ReduxThunk, logger))
+```
+The main catch in this is we are dispatching a function instead of action which is intercepted by the ReduxThunk to execute the function which is `handleDelete` here. 
 
 
 #### 11. Convert Functional to Class Component
