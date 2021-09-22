@@ -106,6 +106,37 @@ using keys we can eliminate the performance problem due to entire page destructi
 ```
 In order to solve this issue, React supports a key attribute. When children have keys, React uses the key to match children in the original tree with children in the subsequent tree. For example, adding a key to our inefficient example can make the tree conversion efficient, and React knows that the element with key '2014' is the new one, and the elements with the keys '2015' and '2016' have just moved.
 
+### 12. How can we update `moreThanTen` state value ?
+```js
+const state  = {
+    allocation: {
+      "Eddy": 2,
+      "Danny": 1,
+      "John": 13
+    },
+    moreThanTen: false,
+  };
+```
+Answer:
+```js
+/** calculate the sum */
+ const sum = Object.keys(state.allocation)
+  .map((item) => state.allocation[item])
+  .reduce((sum, ele) => sum + ele, 0);
+
+console.log(sum)
+
+/** update the state */
+setState({...allocation, moreThanTen: sum > 10 })
+
+/** without setState hook */
+const newState = {
+    ...state.allocation,
+    moreThanTen: sum > 10
+}
+```
+
+
 
 
 
