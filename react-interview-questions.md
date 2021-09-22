@@ -13,6 +13,32 @@ We need to return single element in the react render and often we use `<div>...<
 
 If we need to add id or key to the grouping then we can use `<Fragment id={pageId}>...</Fragment>` over `<>....</>`.
 
+### 4. What does useEffect do? 
+By using Hook, we tell React that our component needs to do something after render. React will remember the function you passed (refer to it as “effect”), and call it later after performing the DOM updates. In this effect, we can manipulate the DOM with user data or data fetched from API's etc.
+
+### 5. Why is useEffect called inside a component? 
+Placing useEffect inside the component lets us access the state variable (or any props) right from the effect. We don’t need a special API to read it — it’s already in the function scope. Hooks embrace JavaScript closures and avoid introducing React-specific APIs where JavaScript already provides a solution.
+
+### 6. Does useEffect run after every render? 
+Yes! By default, it runs both after the first render and after every update. React guarantees the DOM has been updated by the time it runs the effects.
+
+
+### 7. When would i add dependecny in `useEffect` array ?
+```js
+useEffect(() => {
+   const [ courseId, studentId, submissionId ] = someFunction();
+   return () => {
+      someRemoveFunction(courseId, studentId, submissionId)
+    };
+},[studentId]);
+```
+Answer: 
+
+For every re-render useEffect will run cleanup process, not just UNMOUNTING which might cause performance issues. By adding interested props in useEffect array we can force useEffect to run only on `studentId` change.
+
+
+
+
 
 
 
