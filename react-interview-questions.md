@@ -148,6 +148,39 @@ Answer:
 const res = await new Promise(resolve => setTimeout(resolve(data), 10000));
 ```
 
+### 14. How can we make sure we always display default english text whenever we are missing some translations ?
+Imagine we have english and french translations but we forgot to update the french tranmslations with latest `goog night` key and value. A user in france loads the app and we need to display in french and if translations are missing then we need to use it from `en`.
+
+```jsx
+const locale = 'fr-FR'; // 'fr-FR'  or 'en-US'
+
+const en = {
+    'hello': "hello",
+    'bye':"bye",
+    'goodnight':"goodnight"
+}
+
+const fr = {
+    'hello': "Bonjour",
+    'bye': "au revoir",
+}
+
+
+// handling english as default if we have missing translations
+const message = .......
+
+ReactDOM.render(
+    <IntlProvider locale={locale} messages={message}>
+        <App />
+    </IntlProvider>,
+    document.getElementById('root')
+);
+
+```
+Answer:
+``` 
+const message = (locale === 'en-US') ? en : Object.assign({}, en, fr);
+```
 
 
 
