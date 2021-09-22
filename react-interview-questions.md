@@ -138,6 +138,15 @@ const newState = {
 }
 ```
 
+### 13. Can you promisify the result and delay it to 1000ms ?  
+```js
+const data = { name: 'bob', age: 20, score: 100 }
+```
+
+Answer:
+```js
+const res = await new Promise(resolve => setTimeout(resolve(data), 10000));
+```
 
 
 
