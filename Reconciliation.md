@@ -39,6 +39,7 @@ const DiffTypes = ({name}) => {
 }
 ```
 Example of how entire subtree is removed or replaced if the elements types and/or components are different. 
+<img width="1416" alt="Screen Shot 2021-11-29 at 12 26 10 AM" src="https://user-images.githubusercontent.com/16902666/143813706-cf792b48-f7dc-4490-892e-2dc6659d8e12.png">
 
 
 
