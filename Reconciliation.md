@@ -69,4 +69,6 @@ const greeting = (name) => `Hey there, ${name}!`;
   })
 }
 ```
-
+More Details Refer 
+[React](https://reactjs.org/docs/reconciliation.html)
+[Virtual DOM](https://reactjs.org/docs/faq-internals.html)
