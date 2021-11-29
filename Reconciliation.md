@@ -14,12 +14,12 @@ react team is working on [React Fiber](https://github.com/acdlite/react-fiber-ar
 
 ### Algorithm 
 React implements a heuristic algorithm for diffing beetween tree during reconciliation. This will result in O(n) time. But it depends on two main assumptions,
-1. Two elements of different types will produce different trees.
+1. Two elements of DIFFERENT TYPES will produce different trees.
 ```jsx
 const DiffTypes = ({name}) => {
   const greeting = `Hey there, ${name}!`;
   return ( 
-     <div>
+     <div title='greeting' className='greet'>
         <h1> {greeting} <h1>
         <p> Example of reconciliation </p>
      </div>
@@ -31,10 +31,27 @@ If we change `<div>` element to `<span>` then it will destroy all of div and it'
 const DiffTypes = ({name}) => {
   const greeting = `Hey there, ${name}!`;
   return ( 
-     <span>
+     <span title='greeting' className='greet'>
         <h1> {greeting} <h1>
         <p> Example of reconciliation </p>
      </span>
+  )
+}
+```
+Example of how entire subtree is removed or replaced if the elements types and/or components are different. 
+
+
+
+If the DOM Elements are of SAME TYPE then it would be more like just updating the attribute ( example : `className='bink'` )
+```jsx
+
+const DiffTypes = ({name}) => {
+  const greeting = `Hey there, ${name}!`;
+  return ( 
+     <div title='greeting' className='bink'>
+        <h1> {greeting} <h1>
+        <p> Example of reconciliation </p>
+     </div>
   )
 }
 ```
